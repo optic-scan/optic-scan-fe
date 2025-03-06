@@ -15,9 +15,14 @@ const registerFormSchema = z
       .regex(/^[a-zA-Z\s]+$/, {
         message: 'Name can only contain letters and spaces',
       }),
-    email: z.string().email({
-      message: 'Invalid email address',
-    }),
+    email: z
+      .string()
+      .min(1, {
+        message: 'Email is required',
+      })
+      .email({
+        message: 'Invalid email address',
+      }),
     birthDate: z.coerce
       .date()
       .max(new Date(), { message: 'Birthdate cannot be in the future' })
