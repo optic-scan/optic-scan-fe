@@ -1,10 +1,10 @@
-import Logo from '../assets/logo/logo.png';
+import Logo from '../../assets/logo/logo.png';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import Button from '../components/Button';
-import InputField from '../components/InputField';
-import Tabs from './Tabs';
+import Button from '../../components/Button';
+import InputField from '../../components/InputField';
+import Tabs from '../../components/auth-components/Tabs';
 
 const registerFormSchema = z
   .object({
