@@ -66,7 +66,7 @@ export default function RegisterPage() {
 
         <form
           onSubmit={form.handleSubmit(handleSubmit)}
-          className='mt-4 text-sm'
+          className='mt-4 text-xs sm:text-sm'
         >
           <InputField
             label='Name'
@@ -151,7 +151,12 @@ export default function RegisterPage() {
 
   return (
     <div className='bg-[url(/bg-wave.jpg)] bg-cover bg-center h-screen overflow-hidden flex justify-center items-center'>
-      <Tabs tabs={tabItems} />
+      <div className='container px-4 sm:px-6'>
+        <Tabs
+          tabs={tabItems}
+          className={'w-full md:w-6/7 lg:w-5/7 xl:w-1/2 mx-auto'}
+        />
+      </div>
     </div>
   );
 }
