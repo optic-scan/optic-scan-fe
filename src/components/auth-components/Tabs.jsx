@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-const Tabs = ({ tabs, onChange }) => {
+const Tabs = ({ tabs, onChange, className }) => {
   const [currentTab, setCurrentTab] = useState(tabs[0].value);
 
   const handleTabClick = value => {
@@ -9,8 +9,8 @@ const Tabs = ({ tabs, onChange }) => {
   };
 
   return (
-    <div className='bg-white w-1/3 rounded-2xl shadow-xl'>
-      <div className='flex text-sm'>
+    <div className={`${className} bg-white rounded-2xl shadow-xl`}>
+      <div className='flex text-xs sm:text-sm'>
         {tabs.map(tab => (
           <div
             key={tab.value}
@@ -34,7 +34,7 @@ const Tabs = ({ tabs, onChange }) => {
           </div>
         ))}
       </div>
-      <div className='px-20 pt-12 pb-16'>
+      <div className='px-6 sm:px-8 md:px-10 lg:px-12 pt-12 pb-12 sm:pb-16'>
         {tabs.find(tab => tab.value === currentTab)?.content}
       </div>
     </div>
