@@ -1,14 +1,18 @@
 import { Routes, Route } from 'react-router';
 import './App.css';
-import HomePage from './pages/HomePage';
-import RegisterPage from './pages/RegisterPage';
+import HomePage from './pages/landing-page/HomePage';
+import RegisterPage from './pages/auth-page/RegisterPage';
 import NotFoundPage from './pages/NotFoundPage';
+import LoginPage from './pages/auth-page/LoginPage';
+import AboutUsPage from './pages/landing-page/AboutUsPage';
 
 function App() {
   return (
     <>
       <Routes>
         <Route path='/' element={<HomePage />} />
+        <Route path='/about-us' element={<AboutUsPage />} />
+        <Route path='/login' element={<LoginPage />} />
         <Route path='/register' element={<RegisterPage />} />
         <Route path='*' element={<NotFoundPage />} />
       </Routes>
