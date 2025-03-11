@@ -64,7 +64,7 @@ export default function WhatWeOfferSection() {
         <img
           src={WhatWeOfferOrnament1}
           alt='home'
-          className='absolute top-40 sm:top-30 left-[40%] -translate-x-1/2 -translate-y-1/2 z-0'
+          className='absolute top-40 lg:top-30 lg:w-3/5 left-[40%] -translate-x-1/2 -translate-y-1/2 z-0'
         />
         <img
           src={WhatWeOfferOrnament2}

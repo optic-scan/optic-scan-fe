@@ -8,17 +8,21 @@ export default function CardContainer({ children, className }) {
   );
 }
 
-export function CardHeader({ children }) {
+export function CardHeader({ children, className }) {
   return (
-    <h4 className='text-base sm:text-lg md:text-xl font-semibold'>
+    <h4
+      className={`${className} text-base sm:text-lg md:text-xl font-semibold`}
+    >
       {children}
     </h4>
   );
 }
 
-export function CardContent({ children }) {
+export function CardContent({ children, className }) {
   return (
-    <p className='mt-4 md:mt-6 text-sm md:text-base text-[#303030]'>
+    <p
+      className={`${className} mt-4 md:mt-6 text-sm md:text-base text-[#303030]`}
+    >
       {children}
     </p>
   );

@@ -10,7 +10,7 @@ export default function HomePage() {
         <div className='pt-40 container mx-auto px-4 sm:px-6'>
           <LandingHomePageHeroSection />
 
-          <div className='mt-32 pb-24 md:pb-32 xl:pb-40'>
+          <div className='mt-32 pb-24 md:pb-32 xl:pb-40 overflow-hidden'>
             <WhatWeOfferSection />
           </div>
         </div>
