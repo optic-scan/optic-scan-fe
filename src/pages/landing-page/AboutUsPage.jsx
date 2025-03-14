@@ -8,7 +8,7 @@ export default function AboutUsPage() {
       <div className='container mx-auto px-4 sm:px-6'>
         <Navbar />
 
-        <h2 className='mt-24 text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-semibold relative z-10'>
+        <h2 className='pt-48 text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-semibold relative z-10'>
           .WHO ARE WE
         </h2>
 

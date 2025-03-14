@@ -12,7 +12,7 @@ export default function HomePage() {
         <div className='container mx-auto px-4 sm:px-6'>
           <Navbar />
 
-          <div className='mt-32' id='hero'>
+          <div className='pt-48' id='hero'>
             <LandingHomePageHeroSection />
           </div>
 
