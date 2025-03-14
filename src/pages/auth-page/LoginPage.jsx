@@ -5,6 +5,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import Button from '../../components/Button';
 import InputField from '../../components/InputField';
 import Tabs from '../../components/auth-components/Tabs';
+import { useState } from 'react';
+import { FaSpinner } from 'react-icons/fa';
 
 const loginFormSchema = z.object({
   email: z
@@ -26,24 +28,33 @@ export default function LoginPage() {
     resolver: zodResolver(loginFormSchema),
   });
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const handleSubmit = async values => {
-    const req = await fetch(`${import.meta.env.VITE_BASE_URL}/login`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        email: values.email,
-        password: values.password,
-      }),
-    });
+    setIsLoading(true);
+    try {
+      const req = await fetch(`${import.meta.env.VITE_BASE_URL}/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: values.email,
+          password: values.password,
+        }),
+      });
 
-    const res = await req.json();
+      const res = await req.json();
 
-    if (req.status === 200) {
-      alert(res.message);
-    } else if (req.status === 401) {
-      alert(res.message);
+      if (req.status === 200) {
+        alert(res.message);
+      } else if (req.status === 401) {
+        alert(res.message);
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -89,8 +100,16 @@ export default function LoginPage() {
               Back
             </Button>
 
-            <Button type={'submit'} className={'bg-[#146EF5] text-white'}>
-              Login
+            <Button
+              type={'submit'}
+              disabled={isLoading}
+              className={'bg-[#146EF5] text-white'}
+            >
+              {isLoading ? (
+                <FaSpinner className='animate-spin mx-auto' />
+              ) : (
+                'Login'
+              )}
             </Button>
           </div>
         </form>

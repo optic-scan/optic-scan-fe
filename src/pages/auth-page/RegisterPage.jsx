@@ -6,6 +6,7 @@ import Button from '../../components/Button';
 import InputField from '../../components/InputField';
 import Tabs from '../../components/auth-components/Tabs';
 import { useState } from 'react';
+import { FaSpinner } from 'react-icons/fa';
 
 const registerFormSchema = z
   .object({
@@ -56,34 +57,41 @@ export default function RegisterPage() {
   });
 
   const [currentRole, setCurrentRole] = useState('pasien');
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChangeRole = value => {
     setCurrentRole(value);
   };
 
   const handleSubmit = async values => {
-    const req = await fetch(`${import.meta.env.VITE_BASE_URL}/register`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        name: values.name,
-        email: values.email,
-        birthdate: values.birthDate,
-        role: currentRole,
-        password: values.password,
-      }),
-    });
+    setIsLoading(true);
+    try {
+      const req = await fetch(`${import.meta.env.VITE_BASE_URL}/register`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: values.name,
+          email: values.email,
+          birthdate: values.birthDate,
+          role: currentRole,
+          password: values.password,
+        }),
+      });
 
-    const res = await req.json();
+      const res = await req.json();
 
-    console.log(res);
-
-    if (req.status === 201) {
-      alert(res.message);
-    } else if (req.status === 409) {
-      form.setError('email', { message: res.message });
+      if (req.status === 201) {
+        alert(res.message);
+      } else if (req.status === 409) {
+        form.setError('email', { message: res.message });
+      }
+    } catch (error) {
+      console.log(error);
+      alert(error.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -155,8 +163,16 @@ export default function RegisterPage() {
               Back
             </Button>
 
-            <Button type={'submit'} className={'bg-[#146EF5] text-white'}>
-              Register
+            <Button
+              type={'submit'}
+              disabled={isLoading}
+              className={'bg-[#146EF5] text-white'}
+            >
+              {isLoading ? (
+                <FaSpinner className='animate-spin mx-auto' />
+              ) : (
+                'Register'
+              )}
             </Button>
           </div>
         </form>
