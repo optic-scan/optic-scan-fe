@@ -1,10 +1,14 @@
 import CardContainer, { CardContent, CardHeader } from '../../components/Card';
+import Footer from '../../components/footer-components/Footer';
+import Navbar from '../../components/navbar-components/Navbar';
 
 export default function AboutUsPage() {
   return (
     <div className='bg-[#181818] text-white'>
-      <div className='pt-40 container mx-auto px-4 sm:px-6'>
-        <h2 className='text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-semibold relative z-10'>
+      <div className='container mx-auto px-4 sm:px-6'>
+        <Navbar />
+
+        <h2 className='mt-24 text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-semibold relative z-10'>
           .WHO ARE WE
         </h2>
 
@@ -46,6 +50,8 @@ export default function AboutUsPage() {
             </CardContent>
           </CardContainer>
         </div>
+
+        <Footer />
       </div>
     </div>
   );

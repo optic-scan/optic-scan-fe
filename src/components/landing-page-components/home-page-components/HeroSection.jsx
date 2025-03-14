@@ -16,7 +16,7 @@ export default function LandingHomePageHeroSection() {
           System
         </p>
 
-        <Button className='mt-8 sm:mt-10 bg-white text-black w-max px-6 rounded-xl'>
+        <Button className='mt-8 sm:mt-10 bg-white text-black px-6 rounded-xl'>
           Get Started
         </Button>
       </div>
