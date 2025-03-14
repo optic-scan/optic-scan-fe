@@ -26,12 +26,28 @@ export default function LoginPage() {
     resolver: zodResolver(loginFormSchema),
   });
 
-  const handleSubmit = values => {
-    alert('Submitted');
-    console.log(values);
+  const handleSubmit = async values => {
+    const req = await fetch(`${import.meta.env.VITE_BASE_URL}/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: values.email,
+        password: values.password,
+      }),
+    });
+
+    const res = await req.json();
+
+    if (req.status === 200) {
+      alert(res.message);
+    } else if (req.status === 401) {
+      alert(res.message);
+    }
   };
 
-  const patientForm = () => {
+  const loginForm = () => {
     return (
       <>
         <img src={Logo} alt='logo' className='mx-auto' />
@@ -84,14 +100,14 @@ export default function LoginPage() {
 
   const tabItems = [
     {
-      label: 'Register as Patient',
-      value: 'Patient',
-      content: patientForm(),
+      label: 'Login as Patient',
+      value: 'pasien',
+      content: loginForm(),
     },
     {
-      label: 'Register as Doctor',
-      value: 'Doctor',
-      content: patientForm(),
+      label: 'Login as Doctor',
+      value: 'dokter',
+      content: loginForm(),
     },
   ];
 

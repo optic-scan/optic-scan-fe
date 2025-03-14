@@ -5,6 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import Button from '../../components/Button';
 import InputField from '../../components/InputField';
 import Tabs from '../../components/auth-components/Tabs';
+import { useState } from 'react';
 
 const registerFormSchema = z
   .object({
@@ -54,12 +55,39 @@ export default function RegisterPage() {
     resolver: zodResolver(registerFormSchema),
   });
 
-  const handleSubmit = values => {
-    alert('Submitted');
-    console.log(values);
+  const [currentRole, setCurrentRole] = useState('pasien');
+
+  const handleChangeRole = value => {
+    setCurrentRole(value);
   };
 
-  const patientForm = () => {
+  const handleSubmit = async values => {
+    const req = await fetch(`${import.meta.env.VITE_BASE_URL}/register`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: values.name,
+        email: values.email,
+        birthdate: values.birthDate,
+        role: currentRole,
+        password: values.password,
+      }),
+    });
+
+    const res = await req.json();
+
+    console.log(res);
+
+    if (req.status === 201) {
+      alert(res.message);
+    } else if (req.status === 409) {
+      form.setError('email', { message: res.message });
+    }
+  };
+
+  const registerForm = () => {
     return (
       <>
         <img src={Logo} alt='logo' className='mx-auto' />
@@ -139,13 +167,13 @@ export default function RegisterPage() {
   const tabItems = [
     {
       label: 'Register as Patient',
-      value: 'Patient',
-      content: patientForm(),
+      value: 'pasien',
+      content: registerForm(),
     },
     {
       label: 'Register as Doctor',
-      value: 'Doctor',
-      content: patientForm(),
+      value: 'dokter',
+      content: registerForm(),
     },
   ];
 
@@ -154,6 +182,7 @@ export default function RegisterPage() {
       <div className='container px-4 sm:px-6'>
         <Tabs
           tabs={tabItems}
+          onChange={handleChangeRole}
           className={'w-full md:w-6/7 lg:w-5/7 xl:w-1/2 mx-auto'}
         />
       </div>
