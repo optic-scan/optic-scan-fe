@@ -23,7 +23,7 @@ export default function AboutUsSection() {
             quality of care.
           </p>
 
-          <Button className='mt-6 w-max bg-[#146EF5] text-white px-6 rounded-3xl'>
+          <Button className='mt-6 bg-[#146EF5] text-white px-6 rounded-3xl'>
             More Info
           </Button>
         </div>

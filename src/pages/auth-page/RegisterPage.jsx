@@ -159,14 +159,19 @@ export default function RegisterPage() {
           </p>
 
           <div className='flex mt-8 gap-2'>
-            <Button type={'button'} variant={'skeleton'} disabled={true}>
+            <Button
+              type={'button'}
+              variant={'skeleton'}
+              disabled={true}
+              className={'w-1/2'}
+            >
               Back
             </Button>
 
             <Button
               type={'submit'}
               disabled={isLoading}
-              className={'bg-[#146EF5] text-white'}
+              className={'bg-[#146EF5] text-white w-1/2'}
             >
               {isLoading ? (
                 <FaSpinner className='animate-spin mx-auto' />
