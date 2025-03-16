@@ -1,7 +1,6 @@
 import { useLocation } from 'react-router';
 import Logo from '../../assets/logo/icon.png';
 import Button from '../../components/Button';
-import BackgroundBlur from '../../assets/landing-page/what-we-offer-ornament-1.png';
 
 export default function Navbar() {
   const location = useLocation();
