@@ -7,6 +7,7 @@ import InputField from '../../components/InputField';
 import Tabs from '../../components/auth-components/Tabs';
 import { useState } from 'react';
 import { FaSpinner } from 'react-icons/fa';
+import { useNavigate } from 'react-router';
 
 const registerFormSchema = z
   .object({
@@ -52,6 +53,8 @@ const registerFormSchema = z
   });
 
 export default function RegisterPage() {
+  const navigate = useNavigate();
+
   const form = useForm({
     resolver: zodResolver(registerFormSchema),
   });
@@ -85,6 +88,7 @@ export default function RegisterPage() {
 
       if (req.status === 201) {
         alert(res.message);
+        navigate('/login');
       } else if (req.status === 409) {
         form.setError('email', { message: res.message });
       }
