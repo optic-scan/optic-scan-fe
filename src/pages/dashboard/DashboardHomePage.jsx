@@ -43,11 +43,12 @@ export default function HomePasien() {
         <div className='mt-10 flex gap-10 flex-grow h-3/5'>
           <div className='w-1/2 flex flex-col'>
             <h2 className='text-2xl font-semibold'>Scan Eye</h2>
-            <div className='mt-6 bg-[#146EF5] px-10 py-16 rounded-xl flex flex-col justify-between flex-grow'>
+            <div className='mt-6 bg-[#146EF5] px-10 py-16 rounded-xl flex flex-col justify-center flex-grow'>
               <p className='text-white text-2xl w-2/3'>
                 Start scanning your eye with AI powered detection software
               </p>
-              <div className='flex justify-between items-center'>
+
+              <div className='mt-16 flex justify-between items-center'>
                 <Button className={'px-10 bg-white text-black font-semibold'}>
                   Scan Eye
                 </Button>

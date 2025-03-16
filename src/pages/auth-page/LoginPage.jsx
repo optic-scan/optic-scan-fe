@@ -52,6 +52,7 @@ export default function LoginPage() {
 
       if (req.status === 200) {
         alert(res.message);
+        localStorage.setItem('client_access_id', res.accessToken);
         navigate('/dashboard/home');
       } else if (req.status === 401) {
         alert(res.message);
