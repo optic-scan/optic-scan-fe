@@ -7,6 +7,7 @@ import InputField from '../../components/InputField';
 import Tabs from '../../components/auth-components/Tabs';
 import { useState } from 'react';
 import { FaSpinner } from 'react-icons/fa';
+import { useNavigate } from 'react-router';
 
 const loginFormSchema = z.object({
   email: z
@@ -24,6 +25,8 @@ const loginFormSchema = z.object({
 });
 
 export default function LoginPage() {
+  const navigate = useNavigate();
+
   const form = useForm({
     resolver: zodResolver(loginFormSchema),
   });
@@ -49,6 +52,7 @@ export default function LoginPage() {
 
       if (req.status === 200) {
         alert(res.message);
+        navigate('/dashboard/home');
       } else if (req.status === 401) {
         alert(res.message);
       }
