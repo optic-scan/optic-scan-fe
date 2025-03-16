@@ -5,15 +5,59 @@ import RegisterPage from './pages/auth-page/RegisterPage';
 import NotFoundPage from './pages/NotFoundPage';
 import LoginPage from './pages/auth-page/LoginPage';
 import AboutUsPage from './pages/landing-page/AboutUsPage';
+import DashboardHomePage from './pages/dashboard/DashboardHomePage';
+import ProtectedRoute from './components/middleware/ProtectedRoute';
+import RedirectIfAuthenticated from './components/middleware/RedirectIfAuthenticated';
 
 function App() {
   return (
     <>
       <Routes>
-        <Route path='/' element={<HomePage />} />
-        <Route path='/about-us' element={<AboutUsPage />} />
-        <Route path='/login' element={<LoginPage />} />
-        <Route path='/register' element={<RegisterPage />} />
+        <Route
+          path='/'
+          element={
+            <RedirectIfAuthenticated>
+              <HomePage />
+            </RedirectIfAuthenticated>
+          }
+        />
+
+        <Route
+          path='/about-us'
+          element={
+            <RedirectIfAuthenticated>
+              <AboutUsPage />
+            </RedirectIfAuthenticated>
+          }
+        />
+
+        <Route
+          path='/login'
+          element={
+            <RedirectIfAuthenticated>
+              <LoginPage />
+            </RedirectIfAuthenticated>
+          }
+        />
+
+        <Route
+          path='/register'
+          element={
+            <RedirectIfAuthenticated>
+              <RegisterPage />
+            </RedirectIfAuthenticated>
+          }
+        />
+
+        <Route
+          path='/dashboard/home'
+          element={
+            <ProtectedRoute>
+              <DashboardHomePage />
+            </ProtectedRoute>
+          }
+        />
+
         <Route path='*' element={<NotFoundPage />} />
       </Routes>
     </>
