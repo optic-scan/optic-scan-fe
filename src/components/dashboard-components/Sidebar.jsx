@@ -1,9 +1,35 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Logo from '../../assets/logo/icon.png';
-import { useLocation } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
+import Button from '../Button';
 
 export default function SideBar() {
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleLogout = async () => {
+    setIsLoading(true);
+    try {
+      const req = await fetch(`${import.meta.env.VITE_BASE_URL}/logout`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+      });
+
+      if (req.status === 200) {
+        localStorage.removeItem('client_access_id');
+        navigate('/login');
+      }
+    } catch (error) {
+      console.error('Logout failed:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className='h-screen bg-[#262626] w-max px-6 py-10'>
@@ -79,7 +105,9 @@ export default function SideBar() {
           </div>
         </div>
 
-        <div
+        <Button
+          disabled={isLoading}
+          onClick={handleLogout}
           className={`${
             location.pathname === '/dashboard/home' ? 'bg-[#F00]' : ''
           } p-2 rounded-xl cursor-pointer`}
@@ -96,7 +124,7 @@ export default function SideBar() {
               fill='white'
             />
           </svg>
-        </div>
+        </Button>
       </div>
     </div>
   );
