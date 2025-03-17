@@ -8,6 +8,7 @@ import AboutUsPage from './pages/landing-page/AboutUsPage';
 import DashboardHomePage from './pages/dashboard/DashboardHomePage';
 import ProtectedRoute from './components/middleware/ProtectedRoute';
 import RedirectIfAuthenticated from './components/middleware/RedirectIfAuthenticated';
+import DashboardResultsPage from './pages/dashboard/DashboardResultsPage';
 
 function App() {
   return (
@@ -54,6 +55,15 @@ function App() {
           element={
             <ProtectedRoute>
               <DashboardHomePage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path='/dashboard/results'
+          element={
+            <ProtectedRoute>
+              <DashboardResultsPage />
             </ProtectedRoute>
           }
         />

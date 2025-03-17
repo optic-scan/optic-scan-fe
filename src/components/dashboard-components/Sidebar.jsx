@@ -108,9 +108,7 @@ export default function SideBar() {
         <Button
           disabled={isLoading}
           onClick={handleLogout}
-          className={`${
-            location.pathname === '/dashboard/home' ? 'bg-[#F00]' : ''
-          } p-2 rounded-xl cursor-pointer`}
+          className='p-2 bg-[#F00] rounded-xl cursor-pointer'
         >
           <svg
             xmlns='http://www.w3.org/2000/svg'
