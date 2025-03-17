@@ -24,7 +24,7 @@ export default function DashboardResultsPage() {
                 status === 'all'
                   ? 'bg-[#146EF5] text-white'
                   : 'bg-white text-black'
-              } px-6 py-3 rounded-3xl cursor-pointer`}
+              } px-8 py-3 rounded-3xl cursor-pointer`}
               onClick={() => handleStatusChange('all')}
             >
               <p>All</p>
@@ -34,7 +34,7 @@ export default function DashboardResultsPage() {
                 status === 'onGoing'
                   ? 'bg-[#146EF5] text-white'
                   : 'bg-white text-black'
-              } px-6 py-3 rounded-3xl cursor-pointer`}
+              } px-8 py-3 rounded-3xl cursor-pointer`}
               onClick={() => handleStatusChange('onGoing')}
             >
               <p>OnGoing</p>
@@ -44,7 +44,7 @@ export default function DashboardResultsPage() {
                 status === 'completed'
                   ? 'bg-[#146EF5] text-white'
                   : 'bg-white text-black'
-              } px-6 py-3 rounded-3xl cursor-pointer`}
+              } px-8 py-3 rounded-3xl cursor-pointer`}
               onClick={() => handleStatusChange('completed')}
             >
               <p>Completed</p>
