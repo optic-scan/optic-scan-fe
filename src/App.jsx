@@ -50,14 +50,7 @@ function App() {
           }
         />
 
-        <Route
-          path='/dashboard/home'
-          element={
-            <ProtectedRoute>
-              <DashboardHomePage />
-            </ProtectedRoute>
-          }
-        />
+        <Route path='/dashboard/home' element={<DashboardHomePage />} />
 
         <Route
           path='/dashboard/results'

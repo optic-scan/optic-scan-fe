@@ -32,7 +32,7 @@ export default function SideBar() {
   };
 
   return (
-    <div className='h-screen bg-[#262626] w-max px-6 py-10'>
+    <div className='h-screen bg-[#262626] w-max px-6 py-10 hidden xl:block'>
       <div className='flex flex-col justify-between items-center h-full'>
         <div className='flex flex-col gap-16 items-center'>
           <img src={Logo} alt='logo' />
