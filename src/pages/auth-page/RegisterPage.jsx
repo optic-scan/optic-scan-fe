@@ -7,7 +7,10 @@ import InputField from '../../components/InputField';
 import Tabs from '../../components/auth-components/Tabs';
 import { useState } from 'react';
 import { FaSpinner } from 'react-icons/fa';
+import { FaCircleCheck } from 'react-icons/fa6';
+import { RiErrorWarningFill } from 'react-icons/ri';
 import { useNavigate } from 'react-router';
+import { toast } from 'sonner';
 
 const registerFormSchema = z
   .object({
@@ -84,13 +87,32 @@ export default function RegisterPage() {
         }),
       });
 
-      const res = await req.json();
+      /* const res = await req.json(); */
 
       if (req.status === 201) {
-        alert(res.message);
+        toast('Account created successfully', {
+          description:
+            'Your account has been created successfully. You can now log in and start exploring.',
+          icon: <FaCircleCheck className='size-4 text-green-500' />,
+          classNames: {
+            title: '!text-green-500',
+          },
+        });
+
+        form.reset();
+
         navigate('/login');
       } else if (req.status === 409) {
-        form.setError('email', { message: res.message });
+        toast('User already exists', {
+          description:
+            ' An account with this email already exists. Please log in or use a different email.',
+          icon: <RiErrorWarningFill className='size-5 text-red-500' />,
+          classNames: {
+            title: '!text-red-500',
+          },
+        });
+
+        form.reset();
       }
     } catch (error) {
       console.log(error);
