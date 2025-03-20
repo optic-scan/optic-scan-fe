@@ -4,60 +4,64 @@ import SideBar from '../../components/dashboard-components/Sidebar';
 
 export default function HomePasien() {
   return (
-    <div className='flex h-screen'>
+    <div className='flex h-screen overflow-y-hidden'>
       <SideBar />
 
-      <div className='p-10 bg-[#F3F3F3] w-full flex flex-col h-full'>
-        <h1 className='text-3xl font-semibold'>Home</h1>
+      <div className='p-6 md:p-10 bg-[#F3F3F3] w-full flex flex-col h-full overflow-x-hidden overflow-y-auto'>
+        <h1 className='text-xl md:text-2xl lg:text-3xl font-semibold'>Home</h1>
 
-        <div className='mt-10 flex justify-between gap-10 h-2/5'>
-          <CardContainer
-            className={'bg-white w-full flex flex-col justify-center'}
-          >
-            <CardHeader className={'!font-medium'}>Total Scans</CardHeader>
-            <CardContent className={'!font-semibold !text-4xl'}>64</CardContent>
-          </CardContainer>
-
-          <CardContainer
-            className={'bg-white w-full flex flex-col justify-center'}
-          >
-            <CardHeader className={'!font-medium'}>
-              Total Doctor Available
-            </CardHeader>
-            <CardContent className={'!font-semibold !text-4xl'}>32</CardContent>
-          </CardContainer>
-
-          <CardContainer
-            className={'bg-white w-full flex flex-col justify-center'}
-          >
-            <CardHeader className={'!font-medium'}>Ongoing</CardHeader>
-            <CardContent
-              className={'!font-semibold !text-4xl flex items-center gap-4'}
+        <div className='mt-6 md:mt-10 flex justify-between gap-4 xl:gap-6 2xl:gap-10 lg:h-2/5 overflow-x-auto'>
+          {overview.map((item, index) => (
+            <CardContainer
+              key={index}
+              className={
+                'bg-white min-w-[250px] md:min-w-[300px] w-full flex flex-col justify-center !px-6 md:!px-8 lg:!px-10 !py-6 md:!py-8 lg:!py-16'
+              }
             >
-              <span className='size-3 bg-[#41E846] rounded-full'></span>
-              Dr. Amara - 6 Mar
-            </CardContent>
-          </CardContainer>
+              <CardHeader
+                className={
+                  '!text-sm md:!text-base lg:text-lg xl:!text-xl !font-medium'
+                }
+              >
+                {item.title}
+              </CardHeader>
+              <CardContent
+                className={
+                  '!mt-2 xl:!mt-4 2xl:!mt-6 !font-semibold !text-lg md:!text-xl lg:!text-2xl xl:!text-3xl 2xl:!text-4xl'
+                }
+              >
+                {item.value}
+              </CardContent>
+            </CardContainer>
+          ))}
         </div>
 
-        <div className='mt-10 flex gap-10 flex-grow h-3/5'>
-          <div className='w-1/2 flex flex-col'>
-            <h2 className='text-2xl font-semibold'>Scan Eye</h2>
-            <div className='mt-6 bg-[#146EF5] px-10 py-16 rounded-xl flex flex-col justify-center flex-grow'>
-              <p className='text-white text-2xl w-2/3'>
+        <div className='mt-6 md:mt-10 flex flex-col xl:flex-row gap-10 md:flex-grow md:h-3/5'>
+          <div className='xl:w-1/2 flex flex-col'>
+            <h2 className='text-lg md:text-xl lg:text-2xl font-semibold'>
+              Scan Eye
+            </h2>
+            <div className='mt-6 bg-[#146EF5] px-6 md:px-8 lg:px-10 py-6 md:py-8 lg:py-16 rounded-xl flex flex-col justify-center flex-grow'>
+              <p className='text-white text-sm sm:text-base md:text-lg lg:text-2xl font-medium w-[75%] md:w-2/3'>
                 Start scanning your eye with AI powered detection software
               </p>
 
-              <div className='mt-16 flex justify-between items-center'>
-                <Button className={'px-10 bg-white text-black font-semibold'}>
+              <div className='mt-2 lg:mt-8 xl:mt-10 flex justify-between items-center'>
+                <Button
+                  className={
+                    'px-6 md:px-8 lg:px-10 bg-white text-black font-semibold'
+                  }
+                >
                   Scan Eye
                 </Button>
+
                 <svg
                   xmlns='http://www.w3.org/2000/svg'
                   width='107'
                   height='95'
                   viewBox='0 0 107 95'
                   fill='none'
+                  className='size-14 sm:size-16 md:size-18 lg:size-20 xl:size-28'
                 >
                   <g clipPath='url(#clip0_124_24)'>
                     <path
@@ -75,28 +79,35 @@ export default function HomePasien() {
             </div>
           </div>
 
-          <div className='w-1/2 flex flex-col'>
+          <div className='xl:w-1/2 flex flex-col'>
             <div className='flex justify-between'>
-              <h2 className='text-2xl font-semibold'>Result History</h2>
+              <h2 className='text-lg md:text-xl lg:text-2xl font-semibold'>
+                Result History
+              </h2>
               <a
                 href='/dashboard/results'
-                className='text-[#146EF5] underline underline-offset-2 font-medium'
+                className='text-[#146EF5] underline underline-offset-2 font-medium text-sm lg:text-base'
               >
                 View All
               </a>
             </div>
-            <div className='mt-6 bg-white px-10 py-16 rounded-xl flex-grow overflow-auto'>
+
+            <div className='mt-6 md:mb-10 xl:mb-0 bg-white px-6 md:px-8 lg:px-10 py-6 md:py-8 lg:py-16 rounded-xl flex-grow'>
               <div className='flex flex-col gap-3'>
                 {[...Array(4)].map((_, i) => (
                   <div key={i}>
                     <div className='flex justify-between items-center'>
                       <div>
-                        <h4 className='font-semibold'>Dr Amara</h4>
-                        <p className='mt-1 text-sm text-[#484848] font-medium'>
+                        <h4 className='text-xs sm:text-sm md:text-base font-semibold'>
+                          Dr Amara
+                        </h4>
+                        <p className='mt-1 text-xs md:text-sm text-[#484848] font-medium'>
                           Cataracts
                         </p>
                       </div>
-                      <p className='font-semibold'>a day ago</p>
+                      <p className='font-semibold text-xs md:text-sm'>
+                        a day ago
+                      </p>
                     </div>
                     {i !== 3 && (
                       <hr className='mt-3 border-1 border-[#EAEAEA]' />
@@ -111,3 +122,18 @@ export default function HomePasien() {
     </div>
   );
 }
+
+const overview = [
+  {
+    title: 'Total Scan',
+    value: '64',
+  },
+  {
+    title: 'Total Doctor Available',
+    value: '32',
+  },
+  {
+    title: 'OnGoing',
+    value: 'Dr. Amara - 6 Mar',
+  },
+];
