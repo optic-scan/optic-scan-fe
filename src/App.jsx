@@ -52,14 +52,7 @@ function App() {
 
         <Route path='/dashboard/home' element={<DashboardHomePage />} />
 
-        <Route
-          path='/dashboard/results'
-          element={
-            <ProtectedRoute>
-              <DashboardResultsPage />
-            </ProtectedRoute>
-          }
-        />
+        <Route path='/dashboard/results' element={<DashboardResultsPage />} />
 
         <Route path='*' element={<NotFoundPage />} />
       </Routes>

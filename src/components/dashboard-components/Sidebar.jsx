@@ -2,6 +2,15 @@ import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 import Button from '../Button';
 import { IoMenu } from 'react-icons/io5';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '../../../components/ui/dialog';
+import { DialogClose } from '@radix-ui/react-dialog';
 
 export default function SideBar() {
   const location = useLocation();
@@ -42,7 +51,7 @@ export default function SideBar() {
       </div>
 
       <div
-        className={`absolute inset-0 bg-black/40 backdrop-blur-md transition-opacity duration-300 ${
+        className={`absolute inset-0 bg-black/40 backdrop-blur-md transition-opacity duration-300 z-10 ${
           isOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
         }`}
         onClick={() => setIsOpen(!isOpen)}
@@ -51,7 +60,7 @@ export default function SideBar() {
       <div
         className={`${
           isOpen ? 'translate-0' : '-translate-x-full'
-        } h-screen bg-[#262626] w-max px-4 md:px-6 py-6 md:py-10 absolute xl:translate-0 xl:static z-10 transition-all duration-300 ease-in-out`}
+        } h-screen bg-[#262626] w-max px-4 md:px-6 py-6 md:py-10 absolute xl:translate-0 xl:static z-20 transition-all duration-300 ease-in-out`}
       >
         <div className='flex flex-col justify-between items-center h-full'>
           <div className='flex flex-col gap-12 items-center'>
@@ -146,24 +155,81 @@ export default function SideBar() {
             </div>
           </div>
 
-          <Button
-            disabled={isLoading}
-            onClick={handleLogout}
-            className='p-2 bg-[#F00] rounded-xl cursor-pointer'
-          >
-            <svg
-              xmlns='http://www.w3.org/2000/svg'
-              width='24'
-              height='24'
-              viewBox='0 0 24 24'
-              className='size-5 md:size-6'
-            >
-              <path
-                d='M5 21C4.45 21 3.97933 20.8043 3.588 20.413C3.19667 20.0217 3.00067 19.5507 3 19V5C3 4.45 3.196 3.97933 3.588 3.588C3.98 3.19667 4.45067 3.00067 5 3H11C11.2833 3 11.521 3.096 11.713 3.288C11.905 3.48 12.0007 3.71733 12 4C11.9993 4.28267 11.9033 4.52033 11.712 4.713C11.5207 4.90567 11.2833 5.00133 11 5H5V19H11C11.2833 19 11.521 19.096 11.713 19.288C11.905 19.48 12.0007 19.7173 12 20C11.9993 20.2827 11.9033 20.5203 11.712 20.713C11.5207 20.9057 11.2833 21.0013 11 21H5ZM17.175 13H10C9.71667 13 9.47933 12.904 9.288 12.712C9.09667 12.52 9.00067 12.2827 9 12C8.99933 11.7173 9.09533 11.48 9.288 11.288C9.48067 11.096 9.718 11 10 11H17.175L15.3 9.125C15.1167 8.94167 15.025 8.71667 15.025 8.45C15.025 8.18333 15.1167 7.95 15.3 7.75C15.4833 7.55 15.7167 7.44567 16 7.437C16.2833 7.42833 16.525 7.52433 16.725 7.725L20.3 11.3C20.5 11.5 20.6 11.7333 20.6 12C20.6 12.2667 20.5 12.5 20.3 12.7L16.725 16.275C16.525 16.475 16.2877 16.571 16.013 16.563C15.7383 16.555 15.5007 16.4507 15.3 16.25C15.1167 16.05 15.0293 15.8127 15.038 15.538C15.0467 15.2633 15.1423 15.034 15.325 14.85L17.175 13Z'
-                fill='white'
-              />
-            </svg>
-          </Button>
+          <Dialog>
+            <DialogTrigger>
+              <Button
+                disabled={isLoading}
+                className='p-2 bg-[#F00] rounded-xl cursor-pointer'
+              >
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  width='24'
+                  height='24'
+                  viewBox='0 0 24 24'
+                  className='size-5 md:size-6'
+                >
+                  <path
+                    d='M5 21C4.45 21 3.97933 20.8043 3.588 20.413C3.19667 20.0217 3.00067 19.5507 3 19V5C3 4.45 3.196 3.97933 3.588 3.588C3.98 3.19667 4.45067 3.00067 5 3H11C11.2833 3 11.521 3.096 11.713 3.288C11.905 3.48 12.0007 3.71733 12 4C11.9993 4.28267 11.9033 4.52033 11.712 4.713C11.5207 4.90567 11.2833 5.00133 11 5H5V19H11C11.2833 19 11.521 19.096 11.713 19.288C11.905 19.48 12.0007 19.7173 12 20C11.9993 20.2827 11.9033 20.5203 11.712 20.713C11.5207 20.9057 11.2833 21.0013 11 21H5ZM17.175 13H10C9.71667 13 9.47933 12.904 9.288 12.712C9.09667 12.52 9.00067 12.2827 9 12C8.99933 11.7173 9.09533 11.48 9.288 11.288C9.48067 11.096 9.718 11 10 11H17.175L15.3 9.125C15.1167 8.94167 15.025 8.71667 15.025 8.45C15.025 8.18333 15.1167 7.95 15.3 7.75C15.4833 7.55 15.7167 7.44567 16 7.437C16.2833 7.42833 16.525 7.52433 16.725 7.725L20.3 11.3C20.5 11.5 20.6 11.7333 20.6 12C20.6 12.2667 20.5 12.5 20.3 12.7L16.725 16.275C16.525 16.475 16.2877 16.571 16.013 16.563C15.7383 16.555 15.5007 16.4507 15.3 16.25C15.1167 16.05 15.0293 15.8127 15.038 15.538C15.0467 15.2633 15.1423 15.034 15.325 14.85L17.175 13Z'
+                    fill='white'
+                  />
+                </svg>
+              </Button>
+            </DialogTrigger>
+            <DialogContent className={'w-[600px] p-10 [&>button]:hidden'}>
+              <DialogHeader>
+                <DialogTitle className={'flex justify-center'}>
+                  <svg
+                    xmlns='http://www.w3.org/2000/svg'
+                    width='230'
+                    height='230'
+                    viewBox='0 0 230 230'
+                    fill='none'
+                    className='size-50'
+                  >
+                    <path
+                      opacity='0.6'
+                      d='M86.2502 19.1666H95.8335C122.935 19.1666 136.496 19.1666 144.91 27.5904C153.333 36.0045 153.333 49.565 153.333 76.6666V153.333C153.333 180.435 153.333 193.995 144.91 202.41C136.496 210.833 122.935 210.833 95.8335 210.833H86.2502C59.1485 210.833 45.5881 210.833 37.1739 202.41C28.7502 193.995 28.7502 180.435 28.7502 153.333V76.6666C28.7502 49.565 28.7502 36.0045 37.1739 27.5904C45.5881 19.1666 59.1485 19.1666 86.2502 19.1666Z'
+                      fill='#FF0000'
+                    />
+                    <path
+                      opacity='0.4'
+                      d='M153.333 76.6667C153.333 61.9275 153.333 51.2037 151.982 43.125H153.333C175.921 43.125 187.22 43.125 194.235 50.14C201.25 57.155 201.25 68.4537 201.25 91.0417V138.958C201.25 161.546 201.25 172.835 194.235 179.86C187.22 186.885 175.921 186.875 153.333 186.875H151.982C153.333 178.796 153.333 168.072 153.333 153.333V76.6667Z'
+                      fill='#FF0000'
+                    />
+                    <path
+                      fill-rule='evenodd'
+                      clip-rule='evenodd'
+                      d='M187.163 109.921C188.509 111.269 189.265 113.095 189.265 115C189.265 116.905 188.509 118.732 187.163 120.079L167.996 139.246C166.633 140.515 164.831 141.207 162.969 141.174C161.107 141.141 159.331 140.387 158.014 139.07C156.697 137.753 155.943 135.976 155.91 134.114C155.877 132.252 156.568 130.45 157.838 129.088L164.738 122.188H95.8335C93.9272 122.188 92.0991 121.43 90.7512 120.082C89.4032 118.734 88.646 116.906 88.646 115C88.646 113.094 89.4032 111.266 90.7512 109.918C92.0991 108.57 93.9272 107.813 95.8335 107.813H164.738L157.838 100.913C157.131 100.254 156.565 99.461 156.172 98.5793C155.779 97.6977 155.568 96.7459 155.551 95.7808C155.534 94.8158 155.712 93.8572 156.073 92.9622C156.435 92.0672 156.973 91.2542 157.655 90.5717C158.338 89.8892 159.151 89.3512 160.046 88.9897C160.941 88.6282 161.899 88.4506 162.864 88.4677C163.829 88.4847 164.781 88.6959 165.663 89.0888C166.544 89.4816 167.338 90.048 167.996 90.7542L187.163 109.921Z'
+                      fill='#FF0000'
+                    />
+                  </svg>
+                </DialogTitle>
+                <DialogDescription className={'mt-6'}>
+                  <h4 className='text-black text-center font-semibold text-xl'>
+                    Are you sure you want to logout?
+                  </h4>
+
+                  <div className='mt-10 flex gap-4'>
+                    <DialogClose asChild>
+                      <Button
+                        variant={'skeleton'}
+                        className={'text-black w-1/2'}
+                        data-slot='dialog-close'
+                      >
+                        Cancel
+                      </Button>
+                    </DialogClose>
+                    <Button
+                      className={'bg-[#F33D3D] text-white w-1/2'}
+                      onClick={handleLogout}
+                    >
+                      Logout
+                    </Button>
+                  </div>
+                </DialogDescription>
+              </DialogHeader>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
     </>
