@@ -94,7 +94,7 @@ export default function RegisterPage() {
         toast('Account created successfully', {
           description:
             'Your account has been created successfully. You can now log in and start exploring.',
-          icon: <FaCircleCheck className='size-4 text-green-500' />,
+          icon: <FaCircleCheck className='size-5 text-green-500' />,
           classNames: {
             title: '!text-green-500',
           },

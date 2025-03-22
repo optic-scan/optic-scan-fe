@@ -59,7 +59,7 @@ export default function LoginPage() {
 
         toast('Welcome Back!', {
           description: 'You have logged in successfully. Enjoy your session!',
-          icon: <FaCircleCheck className='size-4 text-green-500' />,
+          icon: <FaCircleCheck className='size-5 text-green-500' />,
           classNames: {
             title: '!text-green-500',
           },
