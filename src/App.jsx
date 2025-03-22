@@ -50,9 +50,23 @@ function App() {
           }
         />
 
-        <Route path='/dashboard/home' element={<DashboardHomePage />} />
+        <Route
+          path='/dashboard/home'
+          element={
+            <ProtectedRoute>
+              <DashboardHomePage />
+            </ProtectedRoute>
+          }
+        />
 
-        <Route path='/dashboard/results' element={<DashboardResultsPage />} />
+        <Route
+          path='/dashboard/results'
+          element={
+            <ProtectedRoute>
+              <DashboardResultsPage />
+            </ProtectedRoute>
+          }
+        />
 
         <Route path='*' element={<NotFoundPage />} />
       </Routes>

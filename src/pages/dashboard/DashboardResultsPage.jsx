@@ -69,7 +69,7 @@ export default function DashboardResultsPage() {
 
             <tbody>
               {resultsData.map(result => (
-                <tr>
+                <tr key={result.id}>
                   <td className='text-center px-4 py-2'>{result.id}</td>
                   <td className='text-center px-4 py-2'>{result.date}</td>
                   <td className='text-center px-4 py-2'>{result.doctorName}</td>
