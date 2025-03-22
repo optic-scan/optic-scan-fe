@@ -8,7 +8,9 @@ export default function HomePasien() {
       <SideBar />
 
       <div className='p-6 md:p-10 bg-[#F3F3F3] w-full flex flex-col h-full overflow-x-hidden overflow-y-auto'>
-        <h1 className='text-xl md:text-2xl lg:text-3xl font-semibold'>Home</h1>
+        <h1 className='text-xl md:text-2xl lg:text-3xl font-semibold text-center xl:text-left'>
+          Home
+        </h1>
 
         <div className='mt-6 md:mt-10 flex justify-between gap-4 xl:gap-6 2xl:gap-10 lg:h-2/5 overflow-x-auto'>
           {overview.map((item, index) => (

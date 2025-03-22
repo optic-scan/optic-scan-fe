@@ -15,7 +15,9 @@ export default function DashboardResultsPage() {
       <SideBar />
 
       <div className='p-10 bg-[#F3F3F3] w-full flex flex-col h-full'>
-        <h1 className='text-3xl font-semibold'>Results</h1>
+        <h1 className='text-xl md:text-2xl lg:text-3xl font-semibold text-center xl:text-left'>
+          Results
+        </h1>
 
         <div className='flex justify-end'>
           <div className='flex p-1 bg-white rounded-4xl w-max text-sm border border-[#E8E8E8]'>
