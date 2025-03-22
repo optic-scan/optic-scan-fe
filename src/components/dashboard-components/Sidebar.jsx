@@ -50,8 +50,8 @@ export default function SideBar() {
 
       <div
         className={`${
-          isOpen ? 'left-0' : '-translate-x-full'
-        } h-screen bg-[#262626] w-max px-4 md:px-6 py-6 md:py-10 absolute xl:static z-10 transition-all duration-300 ease-in-out`}
+          isOpen ? 'translate-0' : '-translate-x-full'
+        } h-screen bg-[#262626] w-max px-4 md:px-6 py-6 md:py-10 absolute xl:translate-0 xl:static z-10 transition-all duration-300 ease-in-out`}
       >
         <div className='flex flex-col justify-between items-center h-full'>
           <div className='flex flex-col gap-12 items-center'>
