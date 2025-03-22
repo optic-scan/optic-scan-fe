@@ -11,6 +11,7 @@ import { FaCircleCheck } from 'react-icons/fa6';
 import { RiErrorWarningFill } from 'react-icons/ri';
 import { useNavigate } from 'react-router';
 import { toast } from 'sonner';
+import { PiWarningFill } from 'react-icons/pi';
 
 const registerFormSchema = z
   .object({
@@ -80,7 +81,7 @@ export default function RegisterPage() {
         credentials: 'include',
         body: JSON.stringify({
           name: values.name,
-          email: values.email,
+          email: values.email.toLowerCase(),
           birthdate: values.birthDate,
           role: currentRole,
           password: values.password,
@@ -105,18 +106,30 @@ export default function RegisterPage() {
       } else if (req.status === 409) {
         toast('User already exists', {
           description:
-            ' An account with this email already exists. Please log in or use a different email.',
-          icon: <RiErrorWarningFill className='size-5 text-red-500' />,
+            'An account with this email already exists. Please log in or use a different email.',
+          icon: <PiWarningFill className='size-5 text-yellow-500' />,
           classNames: {
-            title: '!text-red-500',
+            title: '!text-yellow-500',
           },
         });
 
         form.reset();
+      } else {
+        throw new Error(`Unexpected response status: ${req.status}`);
       }
     } catch (error) {
-      console.log(error);
-      alert(error.message);
+      console.error('Registration error:', error);
+
+      toast('Oops! Something Went Wrong', {
+        description:
+          'An error occurred while creating your account. Please try again.',
+        icon: <RiErrorWarningFill className='size-5 text-red-500' />,
+        classNames: {
+          title: '!text-red-500',
+        },
+      });
+
+      form.reset();
     } finally {
       setIsLoading(false);
     }

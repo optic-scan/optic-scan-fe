@@ -8,6 +8,10 @@ import Tabs from '../../components/auth-components/Tabs';
 import { useState } from 'react';
 import { FaSpinner } from 'react-icons/fa';
 import { useNavigate } from 'react-router';
+import { toast } from 'sonner';
+import { FaCircleCheck } from 'react-icons/fa6';
+import { RiErrorWarningFill } from 'react-icons/ri';
+import { PiWarningFill } from 'react-icons/pi';
 
 const loginFormSchema = z.object({
   email: z
@@ -51,14 +55,40 @@ export default function LoginPage() {
       const res = await req.json();
 
       if (req.status === 200) {
-        alert(res.message);
         localStorage.setItem('client_access_id', res.accessToken);
+
+        toast('Welcome Back!', {
+          description: 'You have logged in successfully. Enjoy your session!',
+          icon: <FaCircleCheck className='size-4 text-green-500' />,
+          classNames: {
+            title: '!text-green-500',
+          },
+        });
+
         navigate('/dashboard/home');
       } else if (req.status === 401) {
-        alert(res.message);
+        toast('Login Failed', {
+          description:
+            "The email or password you entered doesn't match our records. Please double-check your credentials and try again.",
+          icon: <PiWarningFill className='size-5 text-yellow-500' />,
+          classNames: {
+            title: '!text-yellow-500',
+          },
+        });
+      } else {
+        throw new Error(`Unexpected response status: ${req.status}`);
       }
     } catch (error) {
-      console.log(error);
+      console.error('Authentication error:', error);
+
+      toast('Oops! Something Went Wrong', {
+        description:
+          'An error occurred while logging into your account. Please try again.',
+        icon: <RiErrorWarningFill className='size-5 text-red-500' />,
+        classNames: {
+          title: '!text-red-500',
+        },
+      });
     } finally {
       setIsLoading(false);
     }
