@@ -4,7 +4,7 @@ import SideBar from '../../components/dashboard-components/Sidebar';
 
 export default function HomePasien() {
   return (
-    <div className='flex h-screen overflow-y-hidden'>
+    <div className='flex xl:h-screen xl:overflow-y-hidden'>
       <SideBar />
 
       <div className='p-6 md:p-10 bg-[#F3F3F3] w-full flex flex-col h-full overflow-x-hidden overflow-y-auto'>
@@ -94,7 +94,7 @@ export default function HomePasien() {
               </a>
             </div>
 
-            <div className='mt-6 md:mb-10 xl:mb-0 bg-white px-6 md:px-8 lg:px-10 py-6 md:py-8 lg:py-16 rounded-xl flex-grow'>
+            <div className='mt-6 bg-white px-6 md:px-8 lg:px-10 py-6 md:py-8 lg:py-16 rounded-xl flex-grow'>
               <div className='flex flex-col gap-3'>
                 {[...Array(4)].map((_, i) => (
                   <div key={i}>

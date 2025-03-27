@@ -9,6 +9,7 @@ import DashboardHomePage from './pages/dashboard/DashboardHomePage';
 import ProtectedRoute from './components/middleware/ProtectedRoute';
 import RedirectIfAuthenticated from './components/middleware/RedirectIfAuthenticated';
 import DashboardResultsPage from './pages/dashboard/DashboardResultsPage';
+import DashboardProfilePage from './pages/dashboard/DashboardProfilePage';
 
 function App() {
   return (
@@ -67,6 +68,8 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+        <Route path='/dashboard/profile' element={<DashboardProfilePage />} />
 
         <Route path='*' element={<NotFoundPage />} />
       </Routes>

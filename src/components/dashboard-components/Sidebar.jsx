@@ -183,7 +183,7 @@ export default function SideBar() {
                   height='230'
                   viewBox='0 0 230 230'
                   fill='none'
-                  className='size-50'
+                  className='size-40 md:size-50'
                 >
                   <path
                     opacity='0.6'
@@ -205,7 +205,7 @@ export default function SideBar() {
               </div>
 
               <div className='mt-6'>
-                <DialogTitle className='text-black text-center font-semibold text-xl'>
+                <DialogTitle className='text-black text-center font-semibold text-base md:text-xl'>
                   Are you sure you want to logout?
                 </DialogTitle>
 
