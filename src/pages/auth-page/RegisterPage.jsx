@@ -202,7 +202,7 @@ export default function RegisterPage() {
             <Button
               type={'button'}
               variant={'skeleton'}
-              disabled={true}
+              onClick={() => navigate(-1)}
               className={'w-1/2'}
             >
               Back
@@ -239,7 +239,7 @@ export default function RegisterPage() {
   ];
 
   return (
-    <div className='bg-[url(/bg-wave.jpg)] bg-cover bg-center h-screen overflow-hidden flex justify-center items-center'>
+    <div className='bg-[url(/src/assets/bg-wave.jpg)] bg-cover bg-center h-screen overflow-hidden flex justify-center items-center'>
       <div className='container px-4 sm:px-6'>
         <Tabs
           tabs={tabItems}

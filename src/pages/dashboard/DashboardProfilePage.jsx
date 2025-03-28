@@ -1,5 +1,5 @@
 import SideBar from '../../components/dashboard-components/Sidebar';
-import Banner from '/bg-wave.jpg';
+import Banner from '../../assets/bg-wave.jpg';
 import { z } from 'zod';
 import Form from '../../components/dashboard-components/Form';
 

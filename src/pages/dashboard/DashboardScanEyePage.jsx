@@ -2,8 +2,11 @@ import { useState } from 'react';
 import SideBar from '../../components/dashboard-components/Sidebar';
 import { useDropzone } from 'react-dropzone';
 import Button from '../../components/Button';
+import { useNavigate } from 'react-router';
 
 export default function DashboardScanEyePage() {
+  const navigate = useNavigate();
+
   const [file, setFile] = useState(null);
 
   const handleFileUpload = acceptedFiles => {
@@ -130,7 +133,7 @@ export default function DashboardScanEyePage() {
             <Button
               type={'button'}
               variant={'skeleton'}
-              disabled={true}
+              onClick={() => navigate(-1)}
               className={'w-1/2 md:w-max md:px-20'}
             >
               Back

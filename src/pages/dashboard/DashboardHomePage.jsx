@@ -53,6 +53,7 @@ export default function HomePasien() {
                   className={
                     'px-6 md:px-8 lg:px-10 bg-white text-black font-semibold'
                   }
+                  href={'/dashboard/scan-eye'}
                 >
                   Scan Eye
                 </Button>
