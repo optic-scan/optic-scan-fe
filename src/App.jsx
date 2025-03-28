@@ -10,6 +10,7 @@ import ProtectedRoute from './components/middleware/ProtectedRoute';
 import RedirectIfAuthenticated from './components/middleware/RedirectIfAuthenticated';
 import DashboardResultsPage from './pages/dashboard/DashboardResultsPage';
 import DashboardProfilePage from './pages/dashboard/DashboardProfilePage';
+import DashboardScanEyePage from './pages/dashboard/DashboardScanEyePage';
 
 function App() {
   return (
@@ -69,7 +70,23 @@ function App() {
           }
         />
 
-        <Route path='/dashboard/profile' element={<DashboardProfilePage />} />
+        <Route
+          path='/dashboard/profile'
+          element={
+            <ProtectedRoute>
+              <DashboardProfilePage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path='/dashboard/scan-eye'
+          element={
+            <ProtectedRoute>
+              <DashboardScanEyePage />
+            </ProtectedRoute>
+          }
+        />
 
         <Route path='*' element={<NotFoundPage />} />
       </Routes>
