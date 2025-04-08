@@ -63,7 +63,7 @@ export default function RegisterPage() {
     resolver: zodResolver(registerFormSchema),
   });
 
-  const [currentRole, setCurrentRole] = useState('pasien');
+  const [currentRole, setCurrentRole] = useState('patient');
   const [isLoading, setIsLoading] = useState(false);
 
   const handleChangeRole = value => {
@@ -228,12 +228,12 @@ export default function RegisterPage() {
   const tabItems = [
     {
       label: 'Register as Patient',
-      value: 'pasien',
+      value: 'patient',
       content: registerForm(),
     },
     {
       label: 'Register as Doctor',
-      value: 'dokter',
+      value: 'doctor',
       content: registerForm(),
     },
   ];

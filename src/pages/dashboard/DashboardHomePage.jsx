@@ -4,10 +4,10 @@ import SideBar from '../../components/dashboard-components/Sidebar';
 
 export default function HomePasien() {
   return (
-    <div className='flex xl:h-screen xl:overflow-y-hidden'>
+    <div className='flex min-h-screen xl:h-screen xl:overflow-y-hidden bg-[#F3F3F3]'>
       <SideBar />
 
-      <div className='p-6 md:p-10 bg-[#F3F3F3] w-full flex flex-col h-full overflow-x-hidden overflow-y-auto'>
+      <div className='p-6 md:p-10 w-full flex flex-col h-full overflow-x-hidden overflow-y-auto'>
         <h1 className='text-xl md:text-2xl lg:text-3xl font-semibold text-center xl:text-left'>
           Home
         </h1>

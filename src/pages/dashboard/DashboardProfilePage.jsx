@@ -2,6 +2,8 @@ import SideBar from '../../components/dashboard-components/Sidebar';
 import Banner from '../../assets/bg-wave.jpg';
 import { z } from 'zod';
 import Form from '../../components/dashboard-components/Form';
+import { useEffect, useState } from 'react';
+import { Skeleton } from '../../../components/ui/skeleton';
 
 const editProfileFormSchema = z.object({
   email: z
@@ -52,22 +54,6 @@ const changePasswordFormSchema = z
     path: ['confirmPassword'],
   });
 
-const editProfileFields = [
-  { label: 'Email', name: 'email', type: 'text' },
-  {
-    label: 'Name',
-    name: 'name',
-    type: 'text',
-    className: 'mt-4 md:mt-6',
-  },
-  {
-    label: 'Birth Date',
-    name: 'birthDate',
-    type: 'date',
-    className: 'mt-4 md:mt-6',
-  },
-];
-
 const changePasswordFields = [
   {
     label: 'Old Password',
@@ -89,6 +75,59 @@ const changePasswordFields = [
 ];
 
 export default function DashboardProfilePage() {
+  const [userData, setUserData] = useState(null);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const accessToken = localStorage.getItem('client_access_id');
+
+        const response = await fetch(
+          `${import.meta.env.VITE_BASE_URL}/user/profile`,
+          {
+            credentials: 'include',
+            headers: {
+              'Content-Type': 'application/json',
+              Accept: 'application/json',
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+
+        const data = await response.json();
+
+        setUserData(data);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
+  const editProfileFields = [
+    {
+      label: 'Email',
+      name: 'email',
+      type: 'text',
+      value: userData?.data.email,
+    },
+    {
+      label: 'Name',
+      name: 'name',
+      type: 'text',
+      value: userData?.data.name,
+      className: 'mt-4 md:mt-6',
+    },
+    {
+      label: 'Birth Date',
+      name: 'birthDate',
+      type: 'date',
+      value: userData?.data.birthdate,
+      className: 'mt-4 md:mt-6',
+    },
+  ];
+
   const handleProfileSubmit = data => {
     console.log('Profile Data:', data);
   };
@@ -150,12 +189,22 @@ export default function DashboardProfilePage() {
               </div>
 
               <div className='mt-2 md:mt-4'>
-                <h4 className='text-base sm:text-lg md:text-xl font-semibold'>
-                  Mamank Asep
-                </h4>
-                <p className='text-sm sm:text-base md:text-lg text-[#484848]'>
-                  Patient
-                </p>
+                {userData ? (
+                  <>
+                    <h4 className='text-base sm:text-lg md:text-xl font-semibold capitalize'>
+                      {userData?.data.name}
+                    </h4>
+
+                    <p className='text-sm sm:text-base md:text-lg text-[#484848] capitalize'>
+                      {userData?.data.role}
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <Skeleton className={'w-32 h-6 rounded-sm'} />
+                    <Skeleton className={'mt-2 w-24 h-6 rounded-sm'} />
+                  </>
+                )}
               </div>
             </div>
 

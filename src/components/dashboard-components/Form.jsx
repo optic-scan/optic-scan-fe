@@ -1,5 +1,6 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useEffect } from 'react';
 import Button from '../Button';
 import InputField from '../InputField';
 
@@ -7,6 +8,17 @@ const Form = ({ schema, onSubmit, fields, submitLabel, className }) => {
   const form = useForm({
     resolver: zodResolver(schema),
   });
+
+  const { reset } = form;
+
+  useEffect(() => {
+    const initialValues = fields.reduce((acc, field) => {
+      acc[field.name] = field.value ?? '';
+      return acc;
+    }, {});
+
+    reset(initialValues);
+  }, [fields, reset]);
 
   return (
     <form className={className} onSubmit={form.handleSubmit(onSubmit)}>
@@ -16,11 +28,12 @@ const Form = ({ schema, onSubmit, fields, submitLabel, className }) => {
           label={field.label}
           name={field.name}
           type={field.type}
+          placeholder={field.placeholder}
           register={form.register}
           errors={form.formState.errors}
           className={field.className}
           labelClassName='font-semibold text-sm md:text-base lg:text-lg'
-          inputClassName='!rounded text-[#484848]'
+          inputClassName='!rounded text-[#484848] text-sm md:text-base'
         />
       ))}
 
