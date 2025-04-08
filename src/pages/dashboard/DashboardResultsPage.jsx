@@ -11,20 +11,22 @@ export default function DashboardResultsPage() {
   };
 
   return (
-    <div className='flex h-screen'>
+    <div className='flex h-screen overflow-y-hidden'>
       <SideBar />
 
-      <div className='p-10 bg-[#F3F3F3] w-full flex flex-col h-full'>
-        <h1 className='text-3xl font-semibold'>Results</h1>
+      <div className='p-6 md:p-10 bg-[#F3F3F3] w-full flex flex-col h-full overflow-x-hidden overflow-y-auto'>
+        <h1 className='text-xl md:text-2xl lg:text-3xl font-semibold text-center xl:text-left'>
+          Results
+        </h1>
 
-        <div className='flex justify-end'>
-          <div className='flex p-1 bg-white rounded-4xl w-max text-sm border border-[#E8E8E8]'>
+        <div className='mt-6 xl:mt-0 flex justify-center xl:justify-end'>
+          <div className='flex p-1 bg-white rounded-4xl w-max text-xs lg:text-sm border border-[#E8E8E8]'>
             <div
               className={`${
                 status === 'all'
                   ? 'bg-[#146EF5] text-white'
                   : 'bg-white text-black'
-              } px-8 py-3 rounded-3xl cursor-pointer`}
+              } px-6 md:px-8 py-2 md:py-3 rounded-3xl cursor-pointer`}
               onClick={() => handleStatusChange('all')}
             >
               <p>All</p>
@@ -34,7 +36,7 @@ export default function DashboardResultsPage() {
                 status === 'onGoing'
                   ? 'bg-[#146EF5] text-white'
                   : 'bg-white text-black'
-              } px-8 py-3 rounded-3xl cursor-pointer`}
+              } px-6 md:px-8 py-2 md:py-3 rounded-3xl cursor-pointer`}
               onClick={() => handleStatusChange('onGoing')}
             >
               <p>OnGoing</p>
@@ -44,7 +46,7 @@ export default function DashboardResultsPage() {
                 status === 'completed'
                   ? 'bg-[#146EF5] text-white'
                   : 'bg-white text-black'
-              } px-8 py-3 rounded-3xl cursor-pointer`}
+              } px-6 md:px-8 py-2 md:py-3 rounded-3xl cursor-pointer`}
               onClick={() => handleStatusChange('completed')}
             >
               <p>Completed</p>
@@ -52,39 +54,39 @@ export default function DashboardResultsPage() {
           </div>
         </div>
 
-        <div className='mt-4 p-10 bg-white rounded-xl border border-[#E8E8E8]'>
-          <table className='w-full border-separate'>
-            <thead className='text-[#707070]'>
+        <div className='mt-6 xl:mt-4 bg-white rounded-xl border border-[#E8E8E8] overflow-y-auto pb-4'>
+          <table className='min-w-max w-full border-collapse text-xs md:text-sm lg:text-base'>
+            <thead className='text-[#707070] sticky top-0 bg-white shadow'>
               <tr>
-                <th className='text-center font-medium py-2'>No</th>
-                <th className='text-center font-medium py-2'>Date</th>
-                <th className='text-center font-medium py-2'>Doctor Name</th>
-                <th className='text-center font-medium py-2'>Diagnosis</th>
-                <th className='text-center font-medium py-2'>Status</th>
-                <th className='text-center font-medium py-2'>Details</th>
+                <th className='text-center font-medium p-4'>No</th>
+                <th className='text-center font-medium p-4'>Date</th>
+                <th className='text-center font-medium p-4'>Doctor Name</th>
+                <th className='text-center font-medium p-4'>Diagnosis</th>
+                <th className='text-center font-medium p-4'>Status</th>
+                <th className='text-center font-medium p-4'>Details</th>
               </tr>
             </thead>
 
             <tbody>
               {resultsData.map(result => (
-                <tr>
-                  <td className='text-center py-2'>{result.id}</td>
-                  <td className='text-center py-2'>{result.date}</td>
-                  <td className='text-center py-2'>{result.doctorName}</td>
-                  <td className='text-center py-2'>{result.diagnosis}</td>
+                <tr key={result.id}>
+                  <td className='text-center px-4 py-2'>{result.id}</td>
+                  <td className='text-center px-4 py-2'>{result.date}</td>
+                  <td className='text-center px-4 py-2'>{result.doctorName}</td>
+                  <td className='text-center px-4 py-2'>{result.diagnosis}</td>
                   <td
                     className={`${
                       result.status === 'Completed'
                         ? 'text-[#41E846]'
                         : 'text-[#ED9C4B]'
-                    } text-center py-2`}
+                    } text-center px-4 py-2`}
                   >
                     {result.status}
                   </td>
-                  <td className='text-center py-2'>
+                  <td className='text-center px-4 py-2'>
                     <Button
                       className={
-                        'bg-[#146EF5] px-6 rounded-lg !text-sm text-white'
+                        'bg-[#146EF5] px-6 rounded-lg !text-xs lg:!text-sm text-white'
                       }
                     >
                       More Info
@@ -98,29 +100,29 @@ export default function DashboardResultsPage() {
 
         <div className='mt-6 flex gap-4 p-3 bg-white rounded-lg w-max'>
           <Button className={'bg-[#D9D9D9]'}>
-            <FaChevronLeft className='size-4' />
+            <FaChevronLeft className='size-2 md:size-4' />
           </Button>
 
-          <div className='flex items-center'>
-            <div className='size-8 flex justify-center items-center rounded bg-[#146EF5] text-white cursor-pointer'>
+          <div className='flex items-center text-xs md:text-sm lg:text-base'>
+            <div className='size-6 md:size-8 flex justify-center items-center rounded bg-[#146EF5] text-white cursor-pointer'>
               <p className=''>1</p>
             </div>
-            <div className='size-8 flex justify-center items-center rounded cursor-pointer'>
+            <div className='size-6 md:size-8 flex justify-center items-center rounded cursor-pointer'>
               <p className=''>2</p>
             </div>
-            <div className='size-8 flex justify-center items-center rounded cursor-pointer'>
+            <div className='size-6 md:size-8 flex justify-center items-center rounded cursor-pointer'>
               <p className=''>3</p>
             </div>
-            <div className='size-8 flex justify-center items-center rounded cursor-pointer'>
+            <div className='size-6 md:size-8 flex justify-center items-center rounded cursor-pointer'>
               <p className=''>...</p>
             </div>
-            <div className='size-8 flex justify-center items-center rounded cursor-pointer'>
+            <div className='size-6 md:size-8 flex justify-center items-center rounded cursor-pointer'>
               <p className=''>10</p>
             </div>
           </div>
 
           <Button className={'bg-[#D9D9D9]'}>
-            <FaChevronRight className='size-4' />
+            <FaChevronRight className='size-2 md:size-4' />
           </Button>
         </div>
       </div>

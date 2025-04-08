@@ -4,11 +4,13 @@ import SideBar from '../../components/dashboard-components/Sidebar';
 
 export default function HomePasien() {
   return (
-    <div className='flex h-screen overflow-y-hidden'>
+    <div className='flex min-h-screen xl:h-screen xl:overflow-y-hidden bg-[#F3F3F3]'>
       <SideBar />
 
-      <div className='p-6 md:p-10 bg-[#F3F3F3] w-full flex flex-col h-full overflow-x-hidden overflow-y-auto'>
-        <h1 className='text-xl md:text-2xl lg:text-3xl font-semibold'>Home</h1>
+      <div className='p-6 md:p-10 w-full flex flex-col h-full overflow-x-hidden overflow-y-auto'>
+        <h1 className='text-xl md:text-2xl lg:text-3xl font-semibold text-center xl:text-left'>
+          Home
+        </h1>
 
         <div className='mt-6 md:mt-10 flex justify-between gap-4 xl:gap-6 2xl:gap-10 lg:h-2/5 overflow-x-auto'>
           {overview.map((item, index) => (
@@ -51,6 +53,7 @@ export default function HomePasien() {
                   className={
                     'px-6 md:px-8 lg:px-10 bg-white text-black font-semibold'
                   }
+                  href={'/dashboard/scan-eye'}
                 >
                   Scan Eye
                 </Button>
@@ -92,7 +95,7 @@ export default function HomePasien() {
               </a>
             </div>
 
-            <div className='mt-6 md:mb-10 xl:mb-0 bg-white px-6 md:px-8 lg:px-10 py-6 md:py-8 lg:py-16 rounded-xl flex-grow'>
+            <div className='mt-6 bg-white px-6 md:px-8 lg:px-10 py-6 md:py-8 lg:py-16 rounded-xl flex-grow'>
               <div className='flex flex-col gap-3'>
                 {[...Array(4)].map((_, i) => (
                   <div key={i}>

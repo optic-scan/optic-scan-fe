@@ -63,7 +63,7 @@ export default function RegisterPage() {
     resolver: zodResolver(registerFormSchema),
   });
 
-  const [currentRole, setCurrentRole] = useState('pasien');
+  const [currentRole, setCurrentRole] = useState('patient');
   const [isLoading, setIsLoading] = useState(false);
 
   const handleChangeRole = value => {
@@ -202,7 +202,7 @@ export default function RegisterPage() {
             <Button
               type={'button'}
               variant={'skeleton'}
-              disabled={true}
+              onClick={() => navigate(-1)}
               className={'w-1/2'}
             >
               Back
@@ -228,18 +228,18 @@ export default function RegisterPage() {
   const tabItems = [
     {
       label: 'Register as Patient',
-      value: 'pasien',
+      value: 'patient',
       content: registerForm(),
     },
     {
       label: 'Register as Doctor',
-      value: 'dokter',
+      value: 'doctor',
       content: registerForm(),
     },
   ];
 
   return (
-    <div className='bg-[url(/bg-wave.jpg)] bg-cover bg-center h-screen overflow-hidden flex justify-center items-center'>
+    <div className='bg-[url(/src/assets/bg-wave.jpg)] bg-cover bg-center h-screen overflow-hidden flex justify-center items-center'>
       <div className='container px-4 sm:px-6'>
         <Tabs
           tabs={tabItems}

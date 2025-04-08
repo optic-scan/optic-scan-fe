@@ -9,6 +9,8 @@ import DashboardHomePage from './pages/dashboard/DashboardHomePage';
 import ProtectedRoute from './components/middleware/ProtectedRoute';
 import RedirectIfAuthenticated from './components/middleware/RedirectIfAuthenticated';
 import DashboardResultsPage from './pages/dashboard/DashboardResultsPage';
+import DashboardProfilePage from './pages/dashboard/DashboardProfilePage';
+import DashboardScanEyePage from './pages/dashboard/DashboardScanEyePage';
 
 function App() {
   return (
@@ -50,13 +52,38 @@ function App() {
           }
         />
 
-        <Route path='/dashboard/home' element={<DashboardHomePage />} />
+        <Route
+          path='/dashboard/home'
+          element={
+            <ProtectedRoute>
+              <DashboardHomePage />
+            </ProtectedRoute>
+          }
+        />
 
         <Route
           path='/dashboard/results'
           element={
             <ProtectedRoute>
               <DashboardResultsPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path='/dashboard/profile'
+          element={
+            <ProtectedRoute>
+              <DashboardProfilePage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path='/dashboard/scan-eye'
+          element={
+            <ProtectedRoute>
+              <DashboardScanEyePage />
             </ProtectedRoute>
           }
         />
