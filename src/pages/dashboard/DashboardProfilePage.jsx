@@ -4,6 +4,7 @@ import { z } from 'zod';
 import Form from '../../components/dashboard-components/Form';
 import { useEffect, useState } from 'react';
 import { Skeleton } from '../../../components/ui/skeleton';
+import { fetchWithRefresh } from '../../../lib/utils';
 
 const editProfileFormSchema = z.object({
   email: z
@@ -80,21 +81,18 @@ export default function DashboardProfilePage() {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const accessToken = localStorage.getItem('client_access_id');
-
-        const response = await fetch(
+        const res = await fetchWithRefresh(
           `${import.meta.env.VITE_BASE_URL}/user/profile`,
           {
             credentials: 'include',
             headers: {
               'Content-Type': 'application/json',
               Accept: 'application/json',
-              Authorization: `Bearer ${accessToken}`,
             },
           }
         );
 
-        const data = await response.json();
+        const data = await res.json();
 
         setUserData(data);
       } catch (error) {
@@ -132,8 +130,28 @@ export default function DashboardProfilePage() {
     console.log('Profile Data:', data);
   };
 
-  const handlePasswordSubmit = data => {
-    console.log('Password Data:', data);
+  const handlePasswordSubmit = async payload => {
+    console.log('Password Data:', payload);
+
+    const res = await fetchWithRefresh(
+      `${import.meta.env.VITE_BASE_URL}/change-password`,
+      {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify({
+          oldPassword: payload.oldPassword,
+          newPassword: payload.newPassword,
+        }),
+      }
+    );
+
+    const data = await res.json();
+
+    console.log(data);
   };
 
   return (
@@ -173,16 +191,16 @@ export default function DashboardProfilePage() {
                     <path
                       d='M4.6665 4.66675H3.99984C3.64622 4.66675 3.30708 4.80722 3.05703 5.05727C2.80698 5.30732 2.6665 5.64646 2.6665 6.00008V12.0001C2.6665 12.3537 2.80698 12.6928 3.05703 12.9429C3.30708 13.1929 3.64622 13.3334 3.99984 13.3334H9.99984C10.3535 13.3334 10.6926 13.1929 10.9426 12.9429C11.1927 12.6928 11.3332 12.3537 11.3332 12.0001V11.3334'
                       stroke='white'
-                      stroke-width='1.5'
-                      stroke-linecap='round'
-                      stroke-linejoin='round'
+                      strokeWidth='1.5'
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
                     />
                     <path
                       d='M10.6667 3.3334L12.6667 5.3334M13.59 4.39007C13.8526 4.12751 14.0001 3.77139 14.0001 3.40007C14.0001 3.02875 13.8526 2.67264 13.59 2.41007C13.3274 2.14751 12.9713 2 12.6 2C12.2287 2 11.8726 2.14751 11.61 2.41007L6 8.00007V10.0001H8L13.59 4.39007Z'
                       stroke='white'
-                      stroke-width='1.5'
-                      stroke-linecap='round'
-                      stroke-linejoin='round'
+                      strokeWidth='1.5'
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
                     />
                   </svg>
                 </div>
