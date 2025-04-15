@@ -2,9 +2,11 @@ import SideBar from '../../components/dashboard-components/Sidebar';
 import Banner from '../../assets/bg-wave.jpg';
 import { z } from 'zod';
 import Form from '../../components/dashboard-components/Form';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Skeleton } from '../../../components/ui/skeleton';
 import { fetchWithRefresh } from '../../../lib/utils';
+import { toast } from 'sonner';
+import { FaCircleCheck, FaCircleXmark } from 'react-icons/fa6';
 
 const editProfileFormSchema = z.object({
   email: z
@@ -78,6 +80,8 @@ const changePasswordFields = [
 export default function DashboardProfilePage() {
   const [userData, setUserData] = useState(null);
 
+  const changePasswordForm = useRef();
+
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -126,17 +130,49 @@ export default function DashboardProfilePage() {
     },
   ];
 
-  const handleProfileSubmit = data => {
-    console.log('Profile Data:', data);
+  const handleProfileSubmit = async payload => {
+    const res = await fetchWithRefresh(
+      `${import.meta.env.VITE_BASE_URL}/user/profile`,
+      {
+        method: 'PATCH',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify({
+          name: payload.name,
+          email: payload.email,
+          birthdate: payload.birthDate,
+        }),
+      }
+    );
+
+    if (res.status === 200) {
+      toast('Account updated successfully', {
+        description: 'Your account details have been updated successfully.',
+        icon: <FaCircleCheck className='size-5 text-green-500' />,
+        classNames: {
+          title: '!text-green-500',
+        },
+      });
+    } else {
+      toast('Error updating account', {
+        description:
+          'There was an error updating your account details. Please try again later.',
+        icon: <FaCircleXmark className='size-5 text-red-500' />,
+        classNames: {
+          title: '!text-red-500',
+        },
+      });
+    }
   };
 
   const handlePasswordSubmit = async payload => {
-    console.log('Password Data:', payload);
-
     const res = await fetchWithRefresh(
-      `${import.meta.env.VITE_BASE_URL}/change-password`,
+      `${import.meta.env.VITE_BASE_URL}/user/change-password`,
       {
-        method: 'POST',
+        method: 'PATCH',
         credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
@@ -151,7 +187,38 @@ export default function DashboardProfilePage() {
 
     const data = await res.json();
 
-    console.log(data);
+    if (res.status === 200) {
+      toast('Password updated successfully', {
+        description: 'Your password has been updated successfully.',
+        icon: <FaCircleCheck className='size-5 text-green-500' />,
+        classNames: {
+          title: '!text-green-500',
+        },
+      });
+
+      changePasswordForm.current?.resetForm();
+    } else if (res.status === 401 && data.message === 'Password lama salah') {
+      toast('You entered the wrong password', {
+        description: 'The password you entered is incorrect. Please try again.',
+        icon: <FaCircleXmark className='size-5 text-red-500' />,
+        classNames: {
+          title: '!text-red-500',
+        },
+      });
+
+      changePasswordForm.current?.resetForm();
+    } else {
+      toast('Error updating password', {
+        description:
+          'There was an error updating your password. Please try again later.',
+        icon: <FaCircleXmark className='size-5 text-red-500' />,
+        classNames: {
+          title: '!text-red-500',
+        },
+      });
+
+      changePasswordForm.current?.resetForm();
+    }
   };
 
   return (
@@ -236,6 +303,7 @@ export default function DashboardProfilePage() {
               />
 
               <Form
+                ref={changePasswordForm}
                 schema={changePasswordFormSchema}
                 onSubmit={handlePasswordSubmit}
                 fields={changePasswordFields}
