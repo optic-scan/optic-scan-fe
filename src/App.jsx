@@ -16,23 +16,9 @@ function App() {
   return (
     <>
       <Routes>
-        <Route
-          path='/'
-          element={
-            <RedirectIfAuthenticated>
-              <HomePage />
-            </RedirectIfAuthenticated>
-          }
-        />
+        <Route path='/' element={<HomePage />} />
 
-        <Route
-          path='/about-us'
-          element={
-            <RedirectIfAuthenticated>
-              <AboutUsPage />
-            </RedirectIfAuthenticated>
-          }
-        />
+        <Route path='/about-us' element={<AboutUsPage />} />
 
         <Route
           path='/login'

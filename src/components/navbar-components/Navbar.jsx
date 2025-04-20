@@ -1,9 +1,38 @@
 import { useLocation } from 'react-router';
 import Logo from '../../assets/logo/icon.png';
 import Button from '../../components/Button';
+import { useEffect, useState } from 'react';
+import { fetchWithRefresh } from '../../../lib/utils';
 
 export default function Navbar() {
   const location = useLocation();
+
+  const [userData, setUserData] = useState(null);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const res = await fetchWithRefresh(
+          `${import.meta.env.VITE_BASE_URL}/user/profile`,
+          {
+            credentials: 'include',
+            headers: {
+              'Content-Type': 'application/json',
+              Accept: 'application/json',
+            },
+          }
+        );
+
+        const data = await res.json();
+
+        setUserData(data);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
 
   return (
     <div className='flex justify-between items-center p-6 fixed inset-x-0 container mx-auto z-50'>
@@ -71,23 +100,41 @@ export default function Navbar() {
         </div>
       </div>
 
-      <div className='flex gap-4'>
-        <a href='/register'>
-          <Button className={'bg-white text-black px-8 rounded-3xl shadow-xl'}>
-            Register
-          </Button>
-        </a>
+      {userData ? (
+        <div className='flex gap-4 items-center'>
+          <p>{userData?.data.name}</p>
 
-        <a href='/login'>
-          <Button
-            className={
-              'bg-[#0E57C6] text-white px-8 rounded-3xl shadow-[5px_7px_20px_rgba(20,110,245,0.25)]'
-            }
-          >
-            Login
-          </Button>
-        </a>
-      </div>
+          <a href='/dashboard/home'>
+            <img
+              src={`${import.meta.env.VITE_BASE_URL}/images/profile-pics/${
+                userData?.data.profile_pic
+              }`}
+              alt='profile'
+              className='size-12 rounded-full border-2 border-white object-center object-cover cursor-pointer'
+            />
+          </a>
+        </div>
+      ) : (
+        <div className='flex gap-4'>
+          <a href='/register'>
+            <Button
+              className={'bg-white text-black px-8 rounded-3xl shadow-xl'}
+            >
+              Register
+            </Button>
+          </a>
+
+          <a href='/login'>
+            <Button
+              className={
+                'bg-[#0E57C6] text-white px-8 rounded-3xl shadow-[5px_7px_20px_rgba(20,110,245,0.25)]'
+              }
+            >
+              Login
+            </Button>
+          </a>
+        </div>
+      )}
     </div>
   );
 }

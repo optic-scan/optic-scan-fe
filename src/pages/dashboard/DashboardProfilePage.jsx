@@ -473,7 +473,7 @@ export default function DashboardProfilePage() {
                     </h4>
 
                     <p className='text-sm sm:text-base md:text-lg text-[#484848] capitalize'>
-                      {userData?.data.role}
+                      {userData?.data.role === 'pasien' ? 'Patient' : 'Doctor'}
                     </p>
                   </>
                 ) : (
