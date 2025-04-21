@@ -1,13 +1,60 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import SideBar from '../../components/dashboard-components/Sidebar';
 import Button from '../../components/Button';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { fetchWithRefresh, formatDate } from '../../../lib/utils';
+
+const ITEMS_PER_PAGE = 10;
 
 export default function DashboardResultsPage() {
   const [status, setStatus] = useState('all');
+  const [resultData, setResultData] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const handleStatusChange = newStatus => {
     setStatus(newStatus);
+    setCurrentPage(1);
+  };
+
+  useEffect(() => {
+    const fetchResultsData = async () => {
+      try {
+        const res = await fetchWithRefresh(
+          `${import.meta.env.VITE_BASE_URL}/exam/my-result`,
+          {
+            credentials: 'include',
+            headers: {
+              'Content-Type': 'application/json',
+              Accept: 'application/json',
+            },
+          }
+        );
+        const data = await res.json();
+        setResultData(data?.data || []);
+      } catch (error) {
+        console.error('Error fetching results data:', error);
+      }
+    };
+
+    fetchResultsData();
+  }, []);
+
+  const filteredResults = resultData.filter(result =>
+    status === 'all' ? true : result.status === status
+  );
+
+  const totalPages = Math.ceil(filteredResults.length / ITEMS_PER_PAGE);
+  const paginatedResults = filteredResults.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) setCurrentPage(prev => prev - 1);
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) setCurrentPage(prev => prev + 1);
   };
 
   return (
@@ -21,36 +68,25 @@ export default function DashboardResultsPage() {
 
         <div className='mt-6 xl:mt-0 flex justify-center xl:justify-end'>
           <div className='flex p-1 bg-white rounded-4xl w-max text-xs lg:text-sm border border-[#E8E8E8]'>
-            <div
-              className={`${
-                status === 'all'
-                  ? 'bg-[#146EF5] text-white'
-                  : 'bg-white text-black'
-              } px-6 md:px-8 py-2 md:py-3 rounded-3xl cursor-pointer`}
-              onClick={() => handleStatusChange('all')}
-            >
-              <p>All</p>
-            </div>
-            <div
-              className={`${
-                status === 'onGoing'
-                  ? 'bg-[#146EF5] text-white'
-                  : 'bg-white text-black'
-              } px-6 md:px-8 py-2 md:py-3 rounded-3xl cursor-pointer`}
-              onClick={() => handleStatusChange('onGoing')}
-            >
-              <p>OnGoing</p>
-            </div>
-            <div
-              className={`${
-                status === 'completed'
-                  ? 'bg-[#146EF5] text-white'
-                  : 'bg-white text-black'
-              } px-6 md:px-8 py-2 md:py-3 rounded-3xl cursor-pointer`}
-              onClick={() => handleStatusChange('completed')}
-            >
-              <p>Completed</p>
-            </div>
+            {['all', 'ongoing', 'complete'].map(s => (
+              <div
+                key={s}
+                className={`${
+                  status === s
+                    ? 'bg-[#146EF5] text-white'
+                    : 'bg-white text-black'
+                } px-6 md:px-8 py-2 md:py-3 rounded-3xl cursor-pointer capitalize`}
+                onClick={() => handleStatusChange(s)}
+              >
+                <p>
+                  {s === 'ongoing'
+                    ? 'OnGoing'
+                    : s === 'complete'
+                    ? 'Completed'
+                    : 'All'}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
 
@@ -66,139 +102,91 @@ export default function DashboardResultsPage() {
                 <th className='text-center font-medium p-4'>Details</th>
               </tr>
             </thead>
-
             <tbody>
-              {resultsData.map(result => (
-                <tr key={result.id}>
-                  <td className='text-center px-4 py-2'>{result.id}</td>
-                  <td className='text-center px-4 py-2'>{result.date}</td>
-                  <td className='text-center px-4 py-2'>{result.doctorName}</td>
-                  <td className='text-center px-4 py-2'>{result.diagnosis}</td>
-                  <td
-                    className={`${
-                      result.status === 'Completed'
-                        ? 'text-[#41E846]'
-                        : 'text-[#ED9C4B]'
-                    } text-center px-4 py-2`}
-                  >
-                    {result.status}
-                  </td>
-                  <td className='text-center px-4 py-2'>
-                    <Button
-                      className={
-                        'bg-[#146EF5] px-6 rounded-lg !text-xs lg:!text-sm text-white'
-                      }
-                    >
-                      More Info
-                    </Button>
+              {paginatedResults.length === 0 ? (
+                <tr>
+                  <td colSpan='6' className='text-center py-6'>
+                    No results found.
                   </td>
                 </tr>
-              ))}
+              ) : (
+                paginatedResults.map((result, index) => (
+                  <tr key={result.id}>
+                    <td className='text-center px-4 py-2'>
+                      {(currentPage - 1) * ITEMS_PER_PAGE + index + 1}
+                    </td>
+                    <td className='text-center px-4 py-2'>
+                      {formatDate(result.examination_date)}
+                    </td>
+                    <td className='text-center px-4 py-2'>
+                      {result.doctor_id}
+                    </td>
+                    <td className='text-center px-4 py-2'>
+                      {result.diagnosis}
+                    </td>
+                    <td
+                      className={`${
+                        result.status === 'complete'
+                          ? 'text-[#41E846]'
+                          : 'text-[#ED9C4B]'
+                      } text-center font-medium px-4 py-2`}
+                    >
+                      {result.status === 'complete' ? 'Completed' : 'OnGoing'}
+                    </td>
+                    <td className='text-center px-4 py-2'>
+                      <Button className='bg-[#146EF5] px-6 rounded-lg !text-xs lg:!text-sm text-white'>
+                        More Info
+                      </Button>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>
 
-        <div className='mt-6 flex gap-4 p-3 bg-white rounded-lg w-max'>
-          <Button className={'bg-[#D9D9D9]'}>
-            <FaChevronLeft className='size-2 md:size-4' />
-          </Button>
+        {totalPages > 1 && (
+          <div className='mt-6 flex gap-4 p-3 bg-white rounded-lg w-max'>
+            <Button
+              className={`bg-[#D9D9D9] ${
+                currentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''
+              }`}
+              onClick={handlePreviousPage}
+              disabled={currentPage === 1}
+            >
+              <FaChevronLeft className='size-2 md:size-4' />
+            </Button>
 
-          <div className='flex items-center text-xs md:text-sm lg:text-base'>
-            <div className='size-6 md:size-8 flex justify-center items-center rounded bg-[#146EF5] text-white cursor-pointer'>
-              <p className=''>1</p>
+            <div className='flex items-center text-xs md:text-sm lg:text-base gap-2'>
+              {[...Array(totalPages)].map((_, idx) => (
+                <div
+                  key={idx}
+                  onClick={() => setCurrentPage(idx + 1)}
+                  className={`size-6 md:size-8 flex justify-center items-center rounded cursor-pointer ${
+                    currentPage === idx + 1
+                      ? 'bg-[#146EF5] text-white'
+                      : 'text-black'
+                  }`}
+                >
+                  <p>{idx + 1}</p>
+                </div>
+              ))}
             </div>
-            <div className='size-6 md:size-8 flex justify-center items-center rounded cursor-pointer'>
-              <p className=''>2</p>
-            </div>
-            <div className='size-6 md:size-8 flex justify-center items-center rounded cursor-pointer'>
-              <p className=''>3</p>
-            </div>
-            <div className='size-6 md:size-8 flex justify-center items-center rounded cursor-pointer'>
-              <p className=''>...</p>
-            </div>
-            <div className='size-6 md:size-8 flex justify-center items-center rounded cursor-pointer'>
-              <p className=''>10</p>
-            </div>
+
+            <Button
+              className={`bg-[#D9D9D9] ${
+                currentPage === totalPages
+                  ? 'opacity-50 cursor-not-allowed'
+                  : ''
+              }`}
+              onClick={handleNextPage}
+              disabled={currentPage === totalPages}
+            >
+              <FaChevronRight className='size-2 md:size-4' />
+            </Button>
           </div>
-
-          <Button className={'bg-[#D9D9D9]'}>
-            <FaChevronRight className='size-2 md:size-4' />
-          </Button>
-        </div>
+        )}
       </div>
     </div>
   );
 }
-
-const resultsData = [
-  {
-    id: 1,
-    date: '6 Mar 2025',
-    doctorName: 'Dr. Amara Felisha',
-    diagnosis: 'Possible Cataracts',
-    status: 'OnGoing',
-  },
-  {
-    id: 2,
-    date: '6 Mar 2025',
-    doctorName: 'Dr. Amara Felisha',
-    diagnosis: 'Glaucoma',
-    status: 'Completed',
-  },
-  {
-    id: 3,
-    date: '6 Mar 2025',
-    doctorName: 'Dr. Amara Felisha',
-    diagnosis: 'Possible Cataracts',
-    status: 'Completed',
-  },
-  {
-    id: 4,
-    date: '6 Mar 2025',
-    doctorName: 'Dr. Amara Felisha',
-    diagnosis: 'Cataracts',
-    status: 'OnGoing',
-  },
-  {
-    id: 5,
-    date: '6 Mar 2025',
-    doctorName: 'Dr. Amara Felisha',
-    diagnosis: 'Possible Glaucoma',
-    status: 'OnGoing',
-  },
-  {
-    id: 6,
-    date: '6 Mar 2025',
-    doctorName: 'Dr. Amara Felisha',
-    diagnosis: 'Possible Cataracts',
-    status: 'Completed',
-  },
-  {
-    id: 7,
-    date: '6 Mar 2025',
-    doctorName: 'Dr. Amara Felisha',
-    diagnosis: 'Glaucoma',
-    status: 'Completed',
-  },
-  {
-    id: 8,
-    date: '6 Mar 2025',
-    doctorName: 'Dr. Amara Felisha',
-    diagnosis: 'Cataracts',
-    status: 'OnGoing',
-  },
-  {
-    id: 9,
-    date: '6 Mar 2025',
-    doctorName: 'Dr. Amara Felisha',
-    diagnosis: 'Glaucoma',
-    status: 'OnGoing',
-  },
-  {
-    id: 10,
-    date: '6 Mar 2025',
-    doctorName: 'Dr. Amara Felisha',
-    diagnosis: 'Cataracts',
-    status: 'OnGoing',
-  },
-];
