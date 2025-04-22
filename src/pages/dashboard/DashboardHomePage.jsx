@@ -7,10 +7,15 @@ import CardContainer, {
   CardHeader,
 } from '../../components/Card';
 import SideBar from '../../components/dashboard-components/Sidebar';
-import { fetchWithRefresh } from '../../../lib/utils';
+import { fetchWithRefresh, formatDate } from '../../../lib/utils';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+
+dayjs.extend(relativeTime);
 
 export default function HomePasien() {
   const [userData, setUserData] = useState(null);
+  const [resultData, setResultData] = useState(null);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -34,8 +39,61 @@ export default function HomePasien() {
       }
     };
 
+    const fetchResultsData = async () => {
+      try {
+        const res = await fetchWithRefresh(
+          `${import.meta.env.VITE_BASE_URL}/exam/my-result`,
+          {
+            credentials: 'include',
+            headers: {
+              'Content-Type': 'application/json',
+              Accept: 'application/json',
+            },
+          }
+        );
+        const data = await res.json();
+        setResultData(data);
+      } catch (error) {
+        console.error('Error fetching results data:', error);
+      }
+    };
+
     fetchUserData();
+    fetchResultsData();
   }, []);
+
+  const overviewPasien = [
+    {
+      title: 'Total Scan',
+      value: resultData?.data.length,
+    },
+    {
+      title: 'Total Doctor Available',
+      value: '32',
+    },
+    {
+      title: 'OnGoing',
+      value: `${resultData?.data[0].doctor_id} - ${formatDate(
+        resultData?.data[0].examination_date,
+        'day-month'
+      )}`,
+    },
+  ];
+
+  const overviewDokter = [
+    {
+      title: 'Total Diagnosis',
+      value: '64',
+    },
+    {
+      title: 'Total Patient',
+      value: '32',
+    },
+    {
+      title: 'OnGoing',
+      value: 'Asep',
+    },
+  ];
 
   const overview =
     userData?.data.role === 'pasien' ? overviewPasien : overviewDokter;
@@ -190,22 +248,22 @@ export default function HomePasien() {
 
             <div className='mt-6 bg-white px-6 md:px-8 lg:px-10 py-6 md:py-8 lg:py-16 rounded-xl flex-grow'>
               <div className='flex flex-col gap-3'>
-                {[...Array(4)].map((_, i) => (
-                  <div key={i}>
+                {resultData?.data.slice(0, 4).map((result, index) => (
+                  <div key={index}>
                     <div className='flex justify-between items-center'>
                       <div>
                         <h4 className='text-xs sm:text-sm md:text-base font-semibold'>
-                          Dr Amara
+                          {result.doctor_id}
                         </h4>
                         <p className='mt-1 text-xs md:text-sm text-[#484848] font-medium'>
-                          Cataracts
+                          {result.diagnosis}
                         </p>
                       </div>
                       <p className='font-semibold text-xs md:text-sm'>
-                        a day ago
+                        {dayjs(result.examination_date).fromNow()}
                       </p>
                     </div>
-                    {i !== 3 && (
+                    {index !== 3 && (
                       <hr className='mt-3 border-1 border-[#EAEAEA]' />
                     )}
                   </div>
@@ -218,33 +276,3 @@ export default function HomePasien() {
     </div>
   );
 }
-
-const overviewPasien = [
-  {
-    title: 'Total Scan',
-    value: '64',
-  },
-  {
-    title: 'Total Doctor Available',
-    value: '32',
-  },
-  {
-    title: 'OnGoing',
-    value: 'Dr. Amara - 6 Mar',
-  },
-];
-
-const overviewDokter = [
-  {
-    title: 'Total Diagnosis',
-    value: '64',
-  },
-  {
-    title: 'Total Patient',
-    value: '32',
-  },
-  {
-    title: 'OnGoing',
-    value: 'Asep',
-  },
-];

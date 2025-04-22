@@ -9,6 +9,7 @@ const ITEMS_PER_PAGE = 10;
 export default function DashboardResultsPage() {
   const [status, setStatus] = useState('all');
   const [resultData, setResultData] = useState([]);
+  const [userData, setUserData] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
 
   const handleStatusChange = newStatus => {
@@ -17,6 +18,27 @@ export default function DashboardResultsPage() {
   };
 
   useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const res = await fetchWithRefresh(
+          `${import.meta.env.VITE_BASE_URL}/user/profile`,
+          {
+            credentials: 'include',
+            headers: {
+              'Content-Type': 'application/json',
+              Accept: 'application/json',
+            },
+          }
+        );
+
+        const data = await res.json();
+
+        setUserData(data);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+
     const fetchResultsData = async () => {
       try {
         const res = await fetchWithRefresh(
@@ -36,6 +58,7 @@ export default function DashboardResultsPage() {
       }
     };
 
+    fetchUserData();
     fetchResultsData();
   }, []);
 
@@ -96,7 +119,11 @@ export default function DashboardResultsPage() {
               <tr>
                 <th className='text-center font-medium p-4'>No</th>
                 <th className='text-center font-medium p-4'>Date</th>
-                <th className='text-center font-medium p-4'>Doctor Name</th>
+                <th className='text-center font-medium p-4'>
+                  {userData?.data.role === 'pasien'
+                    ? 'Doctor Name'
+                    : 'Patient Name'}
+                </th>
                 <th className='text-center font-medium p-4'>Diagnosis</th>
                 <th className='text-center font-medium p-4'>Status</th>
                 <th className='text-center font-medium p-4'>Details</th>
@@ -111,7 +138,7 @@ export default function DashboardResultsPage() {
                 </tr>
               ) : (
                 paginatedResults.map((result, index) => (
-                  <tr key={result.id}>
+                  <tr key={index}>
                     <td className='text-center px-4 py-2'>
                       {(currentPage - 1) * ITEMS_PER_PAGE + index + 1}
                     </td>
@@ -119,7 +146,9 @@ export default function DashboardResultsPage() {
                       {formatDate(result.examination_date)}
                     </td>
                     <td className='text-center px-4 py-2'>
-                      {result.doctor_id}
+                      {userData?.data.role === 'pasien'
+                        ? result.doctor_id
+                        : result.patient_id}
                     </td>
                     <td className='text-center px-4 py-2'>
                       {result.diagnosis}
