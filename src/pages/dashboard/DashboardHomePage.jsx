@@ -83,7 +83,7 @@ export default function HomePasien() {
   const overviewDokter = [
     {
       title: 'Total Diagnosis',
-      value: '64',
+      value: resultData?.data.length,
     },
     {
       title: 'Total Patient',
@@ -91,7 +91,7 @@ export default function HomePasien() {
     },
     {
       title: 'OnGoing',
-      value: 'Asep',
+      value: resultData?.data[0].patient_id,
     },
   ];
 
@@ -133,13 +133,16 @@ export default function HomePasien() {
                   >
                     {item.value}
                   </CardContent>
-                  <CardContentSmall
-                    className={
-                      '!mt-2 xl:!mt-4 2xl:!mt-6 !font-medium !text-xs md:!text-sm'
-                    }
-                  >
-                    and 9+ others
-                  </CardContentSmall>
+
+                  {resultData?.data.length > 1 && (
+                    <CardContentSmall
+                      className={
+                        '!mt-2 xl:!mt-4 2xl:!mt-6 !font-medium !text-xs md:!text-sm'
+                      }
+                    >
+                      {`and ${resultData?.data.length - 1}+ others`}
+                    </CardContentSmall>
+                  )}
                 </CardContentContainer>
               ) : (
                 <CardContent
@@ -253,7 +256,9 @@ export default function HomePasien() {
                     <div className='flex justify-between items-center'>
                       <div>
                         <h4 className='text-xs sm:text-sm md:text-base font-semibold'>
-                          {result.doctor_id}
+                          {userData?.data.role === 'pasien'
+                            ? `Dr ${result.doctor_id}`
+                            : result.patient_id}
                         </h4>
                         <p className='mt-1 text-xs md:text-sm text-[#484848] font-medium'>
                           {result.diagnosis}

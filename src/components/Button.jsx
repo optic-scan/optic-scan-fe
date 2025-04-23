@@ -9,7 +9,7 @@ export default function Button({
 }) {
   const baseClass = `${className} ${
     variant === 'skeleton' && 'border border-[#C4C4C4]'
-  } p-2 text-xs sm:text-sm lg:text-base rounded cursor-pointer disabled:cursor-default disabled:opacity-50`;
+  } p-2 text-center text-xs sm:text-sm lg:text-base rounded cursor-pointer disabled:cursor-default disabled:opacity-50`;
 
   if (href) {
     return (
