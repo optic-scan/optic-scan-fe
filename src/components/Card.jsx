@@ -27,12 +27,12 @@ export function CardContent({ children, className, status, online }) {
     <div className={`${className} mt-4 md:mt-6 flex items-center gap-4`}>
       {status && (
         <div
-          className={`size-3 ${
+          className={`min-h-3 max-h-3 min-w-3 max-w-3  ${
             online ? 'bg-green-500' : 'bg-red-500'
           } rounded-full`}
         ></div>
       )}
-      <p>{children}</p>
+      <p className=''>{children}</p>
     </div>
   );
 }

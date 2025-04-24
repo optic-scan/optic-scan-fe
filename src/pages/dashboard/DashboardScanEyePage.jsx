@@ -29,8 +29,13 @@ const formSchema = z.object({
     .refine(
       file =>
         file && ['image/jpeg', 'image/png', 'image/jpg'].includes(file.type),
-      { message: 'Unsupported file format' }
-    ),
+      {
+        message: 'Unsupported file format',
+      }
+    )
+    .refine(file => file && file.size <= 5 * 1024 * 1024, {
+      message: 'File size must be less than or equal to 5MB',
+    }),
   complaints: z.string(),
 });
 
@@ -65,6 +70,36 @@ export default function DashboardScanEyePage() {
     }
   };
 
+  const onDropRejected = fileRejections => {
+    const error = fileRejections[0]?.errors[0];
+    if (error?.code === 'file-too-large') {
+      toast('Oops! Something Went Wrong', {
+        description: 'File size must be less than or equal to 5MB.',
+        icon: <RiErrorWarningFill className='size-5 text-red-500' />,
+        classNames: {
+          title: '!text-red-500',
+        },
+      });
+    } else if (error?.code === 'file-invalid-type') {
+      toast('Oops! Something Went Wrong', {
+        description: 'File must be in JPEG, PNG, or JPG format.',
+        icon: <RiErrorWarningFill className='size-5 text-red-500' />,
+        classNames: {
+          title: '!text-red-500',
+        },
+      });
+    } else {
+      toast('Oops! Something Went Wrong', {
+        description:
+          'An error occurred while uploading the file. Please try again later.',
+        icon: <RiErrorWarningFill className='size-5 text-red-500' />,
+        classNames: {
+          title: '!text-red-500',
+        },
+      });
+    }
+  };
+
   const {
     getRootProps,
     getInputProps,
@@ -78,7 +113,9 @@ export default function DashboardScanEyePage() {
       'image/jpg': [],
     },
     maxFiles: 1,
+    maxSize: 5 * 1024 * 1024, // 5MB
     onDrop,
+    onDropRejected,
   });
 
   const onSubmit = async data => {
@@ -117,6 +154,8 @@ export default function DashboardScanEyePage() {
         setValue('file', null);
         setValue('complaints', '');
       } else {
+        setIsDialogOpen(false);
+
         toast('Oops! Something Went Wrong', {
           description:
             'An error occurred while submitting your eye examination. Please try again later.',

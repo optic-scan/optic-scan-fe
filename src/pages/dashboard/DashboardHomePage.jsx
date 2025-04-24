@@ -16,6 +16,7 @@ dayjs.extend(relativeTime);
 export default function HomePasien() {
   const [userData, setUserData] = useState(null);
   const [resultData, setResultData] = useState(null);
+  const [userCount, setUserCount] = useState(0);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -58,8 +59,28 @@ export default function HomePasien() {
       }
     };
 
+    const fetchUserCount = async () => {
+      try {
+        const res = await fetchWithRefresh(
+          `${import.meta.env.VITE_BASE_URL}/user/users-count`,
+          {
+            credentials: 'include',
+            headers: {
+              'Content-Type': 'application/json',
+              Accept: 'application/json',
+            },
+          }
+        );
+        const data = await res.json();
+        setUserCount(data);
+      } catch (error) {
+        console.error('Error fetching user count:', error);
+      }
+    };
+
     fetchUserData();
     fetchResultsData();
+    fetchUserCount();
   }, []);
 
   const overviewPasien = [
@@ -69,14 +90,17 @@ export default function HomePasien() {
     },
     {
       title: 'Total Doctor Available',
-      value: '32',
+      value: userCount?.data?.total_dokter,
     },
     {
       title: 'OnGoing',
-      value: `${resultData?.data[0].doctor_id} - ${formatDate(
-        resultData?.data[0].examination_date,
-        'day-month'
-      )}`,
+      value:
+        resultData?.data.length > 0
+          ? `${resultData?.data[0]?.doctor.name.slice(0, 9)} - ${formatDate(
+              resultData?.data[0]?.examination_date,
+              'day-month'
+            )}`
+          : 'None',
     },
   ];
 
@@ -87,11 +111,14 @@ export default function HomePasien() {
     },
     {
       title: 'Total Patient',
-      value: '32',
+      value: userCount?.data?.total_pasien,
     },
     {
       title: 'OnGoing',
-      value: resultData?.data[0].patient_id,
+      value:
+        resultData?.data.length > 0
+          ? resultData?.data[0]?.patient.name.slice(0, 9)
+          : 'None',
     },
   ];
 
@@ -129,7 +156,7 @@ export default function HomePasien() {
                       '!mt-2 xl:!mt-4 2xl:!mt-6 !font-semibold !text-lg md:!text-xl lg:!text-2xl xl:!text-3xl 2xl:!text-4xl'
                     }
                     status={true}
-                    online={true}
+                    online={resultData?.data.length > 0 ? true : false}
                   >
                     {item.value}
                   </CardContent>
@@ -150,7 +177,7 @@ export default function HomePasien() {
                     '!mt-2 xl:!mt-4 2xl:!mt-6 !font-semibold !text-lg md:!text-xl lg:!text-2xl xl:!text-3xl 2xl:!text-4xl'
                   }
                   status={index === 2}
-                  online={true}
+                  online={resultData?.data.length > 0 ? true : false}
                 >
                   {item.value}
                 </CardContent>
@@ -250,30 +277,38 @@ export default function HomePasien() {
             </div>
 
             <div className='mt-6 bg-white px-6 md:px-8 lg:px-10 py-6 md:py-8 lg:py-16 rounded-xl flex-grow'>
-              <div className='flex flex-col gap-3'>
-                {resultData?.data.slice(0, 4).map((result, index) => (
-                  <div key={index}>
-                    <div className='flex justify-between items-center'>
-                      <div>
-                        <h4 className='text-xs sm:text-sm md:text-base font-semibold'>
-                          {userData?.data.role === 'pasien'
-                            ? `Dr ${result.doctor_id}`
-                            : result.patient_id}
-                        </h4>
-                        <p className='mt-1 text-xs md:text-sm text-[#484848] font-medium'>
-                          {result.diagnosis}
+              {resultData?.data.length > 0 ? (
+                <div className='flex flex-col gap-3'>
+                  {resultData?.data.slice(0, 4).map((result, index) => (
+                    <div key={index}>
+                      <div className='flex justify-between items-center'>
+                        <div>
+                          <h4 className='text-xs sm:text-sm md:text-base font-semibold'>
+                            {userData?.data.role === 'pasien'
+                              ? `Dr. ${result.doctor.name}`
+                              : result.patient.name}
+                          </h4>
+                          <p className='mt-1 text-xs md:text-sm text-[#484848] font-medium'>
+                            {result.diagnosis}
+                          </p>
+                        </div>
+                        <p className='font-semibold text-xs md:text-sm'>
+                          {dayjs(result.examination_date).fromNow()}
                         </p>
                       </div>
-                      <p className='font-semibold text-xs md:text-sm'>
-                        {dayjs(result.examination_date).fromNow()}
-                      </p>
+                      {index !== 3 && (
+                        <hr className='mt-3 border-1 border-[#EAEAEA]' />
+                      )}
                     </div>
-                    {index !== 3 && (
-                      <hr className='mt-3 border-1 border-[#EAEAEA]' />
-                    )}
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              ) : (
+                <div className='flex items-center justify-center h-full'>
+                  <p className='text-xs md:text-sm text-[#484848]'>
+                    Your result history is empty
+                  </p>
+                </div>
+              )}
             </div>
           </div>
         </div>

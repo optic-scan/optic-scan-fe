@@ -1,16 +1,48 @@
 import { useEffect, useState } from 'react';
 import SideBar from '../../components/dashboard-components/Sidebar';
 import Button from '../../components/Button';
-import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
-import { fetchWithRefresh, formatDate } from '../../../lib/utils';
+import { FaChevronLeft, FaChevronRight, FaSpinner } from 'react-icons/fa';
+import {
+  fetchWithRefresh,
+  formatDate,
+  formatDateToYearsMonths,
+} from '../../../lib/utils';
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogTrigger,
+} from '../../../components/ui/dialog';
+import { z } from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import InputField from '../../components/InputField';
+import { toast } from 'sonner';
+import { RiErrorWarningFill } from 'react-icons/ri';
+import { FaCircleCheck } from 'react-icons/fa6';
 
 const ITEMS_PER_PAGE = 10;
+
+const loginFormSchema = z.object({
+  diagnosis: z.string().min(1, {
+    message: 'Diagnosis is required',
+  }),
+  doctorsNote: z.string(),
+});
 
 export default function DashboardResultsPage() {
   const [status, setStatus] = useState('all');
   const [resultData, setResultData] = useState([]);
   const [userData, setUserData] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isDiagnosing, setIsDiagnosing] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [seletedResultIndex, setSeletedResultIndex] = useState(null);
+
+  const form = useForm({
+    resolver: zodResolver(loginFormSchema),
+  });
 
   const handleStatusChange = newStatus => {
     setStatus(newStatus);
@@ -80,6 +112,59 @@ export default function DashboardResultsPage() {
     if (currentPage < totalPages) setCurrentPage(prev => prev + 1);
   };
 
+  const handleSubmit = async values => {
+    console.log(values);
+    console.log(resultData[seletedResultIndex]?.examination_id);
+
+    setIsLoading(true);
+    try {
+      const req = await fetchWithRefresh(
+        `${import.meta.env.VITE_BASE_URL}/exam/diagnosis-dokter`,
+        {
+          method: 'POST',
+          body: JSON.stringify({
+            examination_id: resultData[seletedResultIndex]?.examination_id,
+            diagnosis: values.diagnosis,
+            doctors_note: values.doctorsNote || null,
+          }),
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+          },
+        }
+      );
+
+      if (req.status === 200) {
+        toast('Diagnosed Successfully', {
+          description:
+            'You have successfully diagnosed the patient. You will need to refresh the page to see the changes.',
+          icon: <FaCircleCheck className='size-5 text-green-500' />,
+          classNames: {
+            title: '!text-green-500',
+          },
+        });
+
+        setIsDialogOpen(false);
+      } else {
+        throw new Error(`Unexpected response status: ${req.status}`);
+      }
+    } catch (error) {
+      console.error('Authentication error:', error);
+
+      toast('Oops! Something Went Wrong', {
+        description:
+          'There was an error processing your request. Please try again later.',
+        icon: <RiErrorWarningFill className='size-5 text-red-500' />,
+        classNames: {
+          title: '!text-red-500',
+        },
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className='flex h-screen overflow-y-hidden'>
       <SideBar />
@@ -147,8 +232,8 @@ export default function DashboardResultsPage() {
                     </td>
                     <td className='text-center px-4 py-2'>
                       {userData?.data.role === 'pasien'
-                        ? result.doctor_id
-                        : result.patient_id}
+                        ? `Dr. ${result.doctor.name}`
+                        : result.patient.name}
                     </td>
                     <td className='text-center px-4 py-2'>
                       {result.diagnosis}
@@ -163,9 +248,222 @@ export default function DashboardResultsPage() {
                       {result.status === 'complete' ? 'Completed' : 'OnGoing'}
                     </td>
                     <td className='text-center px-4 py-2'>
-                      <Button className='bg-[#146EF5] px-6 rounded-lg !text-xs lg:!text-sm text-white'>
-                        More Info
-                      </Button>
+                      <Dialog open={isDialogOpen}>
+                        <DialogTrigger
+                          asChild
+                          onClick={() => setIsDialogOpen(true)}
+                        >
+                          <Button
+                            onClick={() => setSeletedResultIndex(index)}
+                            className='bg-[#146EF5] px-6 rounded-lg !text-xs lg:!text-sm text-white'
+                          >
+                            More Info
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent
+                          className={
+                            'md:min-w-[600px] p-6 sm:p-10 [&>button]:hidden outline-none'
+                          }
+                        >
+                          <h4 className='text-lg md:text-xl font-semibold text-center'>
+                            Details
+                          </h4>
+
+                          <img
+                            src={`${
+                              import.meta.env.VITE_BASE_URL
+                            }/images/eye-scans/${
+                              resultData[seletedResultIndex]?.eye_pic
+                            }`}
+                            alt='result'
+                            className='w-full mt-4 mx-auto rounded-lg'
+                          />
+
+                          {!isDiagnosing && (
+                            <div className=''>
+                              <div className='mt-6 flex justify-between'>
+                                <p className='font-semibold'>
+                                  {resultData[seletedResultIndex]?.status ===
+                                  'complete'
+                                    ? 'Diagnosis'
+                                    : 'Early Diagnosis by AI'}
+                                </p>
+                                <p className='text-right capitalize font-semibold text-[#484848]'>
+                                  {resultData[seletedResultIndex]?.diagnosis}
+                                </p>
+                              </div>
+
+                              <div className='mt-2 flex justify-between'>
+                                <p className='font-semibold'>
+                                  {userData?.data.role === 'pasien'
+                                    ? 'Doctor Name'
+                                    : 'Patient Name'}
+                                </p>
+                                <p className='text-right capitalize font-semibold text-[#484848]'>
+                                  {userData?.data.role === 'pasien'
+                                    ? `Dr. ${resultData[seletedResultIndex]?.doctor.name}`
+                                    : resultData[seletedResultIndex]?.patient
+                                        .name}
+                                </p>
+                              </div>
+
+                              <div className='mt-2 flex justify-between'>
+                                <p className='font-semibold'>
+                                  {userData?.data.role === 'pasien'
+                                    ? 'Date'
+                                    : 'Age'}
+                                </p>
+                                <p className='text-right font-semibold text-[#484848]'>
+                                  {userData?.data.role === 'pasien'
+                                    ? formatDate(
+                                        resultData[seletedResultIndex]
+                                          ?.examination_date
+                                      )
+                                    : formatDateToYearsMonths(
+                                        resultData[seletedResultIndex]
+                                          ?.examination_date
+                                      )}
+                                </p>
+                              </div>
+
+                              <div className='mt-2 flex justify-between'>
+                                <p className='font-semibold'>
+                                  {userData?.data.role === 'pasien'
+                                    ? 'Status'
+                                    : 'Date'}
+                                </p>
+
+                                {userData?.data.role === 'pasien' && (
+                                  <p
+                                    className={`text-right capitalize font-semibold ${
+                                      resultData[seletedResultIndex]?.status ===
+                                      'complete'
+                                        ? 'text-[#41E846]'
+                                        : 'text-[#ED9C4B]'
+                                    }`}
+                                  >
+                                    {resultData[seletedResultIndex]?.status ===
+                                    'complete'
+                                      ? 'Completed'
+                                      : 'OnGoing'}
+                                  </p>
+                                )}
+
+                                {userData?.data.role === 'dokter' && (
+                                  <p className='text-right font-semibold text-[#484848]'>
+                                    {formatDate(
+                                      resultData[seletedResultIndex]
+                                        ?.examination_date
+                                    )}
+                                  </p>
+                                )}
+                              </div>
+
+                              <div className='mt-2 flex justify-between'>
+                                <p className='font-semibold'>
+                                  {userData?.data.role === 'pasien'
+                                    ? 'Doctors Note'
+                                    : 'Status'}
+                                </p>
+
+                                {userData?.data.role === 'pasien' && (
+                                  <p className='text-right capitalize font-semibold text-[#484848]'>
+                                    {resultData[seletedResultIndex]
+                                      ?.doctors_note
+                                      ? resultData[seletedResultIndex]
+                                          ?.doctors_note
+                                      : '-'}
+                                  </p>
+                                )}
+
+                                {userData?.data.role === 'dokter' && (
+                                  <p
+                                    className={`text-right capitalize font-semibold ${
+                                      resultData[seletedResultIndex]?.status ===
+                                      'complete'
+                                        ? 'text-[#41E846]'
+                                        : 'text-[#ED9C4B]'
+                                    }`}
+                                  >
+                                    {resultData[seletedResultIndex]?.status ===
+                                    'complete'
+                                      ? 'Completed'
+                                      : 'OnGoing'}
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+                          )}
+
+                          {isDiagnosing && (
+                            <form onSubmit={form.handleSubmit(handleSubmit)}>
+                              <InputField
+                                label='Diagnosis'
+                                name='diagnosis'
+                                type='text'
+                                register={form.register}
+                                errors={form.formState.errors}
+                                className={'mt-4'}
+                                labelClassName={'text-sm md:text-base'}
+                                inputClassName={'text-sm md:text-base'}
+                              />
+
+                              <InputField
+                                label='Add Note'
+                                name='doctorsNote'
+                                type='text'
+                                as='textarea'
+                                register={form.register}
+                                errors={form.formState.errors}
+                                className={'mt-4'}
+                                labelClassName={'text-sm md:text-base'}
+                                inputClassName={'text-sm md:text-base'}
+                              />
+                            </form>
+                          )}
+
+                          <div className='mt-6 flex justify-center gap-4'>
+                            <DialogClose
+                              asChild
+                              variant={
+                                userData?.data.role === 'dokter' && 'skeleton'
+                              }
+                              onClick={
+                                isDiagnosing
+                                  ? () => setIsDiagnosing(false)
+                                  : () => setIsDialogOpen(false)
+                              }
+                            >
+                              <Button
+                                className={`${
+                                  userData?.data.role === 'dokter'
+                                    ? 'w-1/2'
+                                    : 'bg-[#146EF5] text-white px-16 py-3'
+                                } rounded-md !text-xs lg:!text-sm`}
+                              >
+                                Back
+                              </Button>
+                            </DialogClose>
+
+                            {userData?.data.role === 'dokter' && (
+                              <Button
+                                onClick={
+                                  isDiagnosing
+                                    ? form.handleSubmit(handleSubmit)
+                                    : () => setIsDiagnosing(true)
+                                }
+                                className='w-1/2 bg-[#146EF5] py-3 rounded-md !text-xs lg:!text-sm text-white'
+                              >
+                                {isLoading ? (
+                                  <FaSpinner className='animate-spin mx-auto' />
+                                ) : (
+                                  'Diagnose'
+                                )}
+                              </Button>
+                            )}
+                          </div>
+                        </DialogContent>
+                      </Dialog>
                     </td>
                   </tr>
                 ))
