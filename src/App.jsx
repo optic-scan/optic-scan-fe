@@ -11,6 +11,7 @@ import RedirectIfAuthenticated from './components/middleware/RedirectIfAuthentic
 import DashboardResultsPage from './pages/dashboard/DashboardResultsPage';
 import DashboardProfilePage from './pages/dashboard/DashboardProfilePage';
 import DashboardScanEyePage from './pages/dashboard/DashboardScanEyePage';
+import HowItWorksPage from './pages/landing-page/HowItWorksPage';
 
 function App() {
   return (
@@ -19,6 +20,8 @@ function App() {
         <Route path='/' element={<HomePage />} />
 
         <Route path='/about-us' element={<AboutUsPage />} />
+
+        <Route path='/how-it-works' element={<HowItWorksPage />} />
 
         <Route
           path='/login'
