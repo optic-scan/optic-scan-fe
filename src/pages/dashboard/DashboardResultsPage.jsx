@@ -19,7 +19,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import InputField from '../../components/InputField';
 import { toast } from 'sonner';
 import { RiErrorWarningFill } from 'react-icons/ri';
-import { FaCircleCheck } from 'react-icons/fa6';
+import Lottie from 'lottie-react';
+import SuccessImage from '../../assets/dashboard/ai-success.json';
 
 const ITEMS_PER_PAGE = 10;
 
@@ -38,6 +39,7 @@ export default function DashboardResultsPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isDiagnosing, setIsDiagnosing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
   const [seletedResultIndex, setSeletedResultIndex] = useState(null);
 
   const form = useForm({
@@ -113,9 +115,6 @@ export default function DashboardResultsPage() {
   };
 
   const handleSubmit = async values => {
-    console.log(values);
-    console.log(resultData[seletedResultIndex]?.examination_id);
-
     setIsLoading(true);
     try {
       const req = await fetchWithRefresh(
@@ -136,21 +135,24 @@ export default function DashboardResultsPage() {
       );
 
       if (req.status === 200) {
-        toast('Diagnosed Successfully', {
+        setIsSuccess(true);
+
+        form.reset();
+      } else {
+        setIsDialogOpen(false);
+
+        toast('Oops! Something Went Wrong', {
           description:
-            'You have successfully diagnosed the patient. You will need to refresh the page to see the changes.',
-          icon: <FaCircleCheck className='size-5 text-green-500' />,
+            'There was an error processing your request. Please try again later.',
+          icon: <RiErrorWarningFill className='size-5 text-red-500' />,
           classNames: {
-            title: '!text-green-500',
+            title: '!text-red-500',
           },
         });
-
-        setIsDialogOpen(false);
-      } else {
-        throw new Error(`Unexpected response status: ${req.status}`);
       }
     } catch (error) {
-      console.error('Authentication error:', error);
+      console.error('Error submitting diagnosis:', error);
+      setIsDialogOpen(false);
 
       toast('Oops! Something Went Wrong', {
         description:
@@ -235,7 +237,7 @@ export default function DashboardResultsPage() {
                         ? `Dr. ${result.doctor.name}`
                         : result.patient.name}
                     </td>
-                    <td className='text-center px-4 py-2'>
+                    <td className='text-center px-4 py-2 capitalize'>
                       {result.diagnosis}
                     </td>
                     <td
@@ -265,19 +267,23 @@ export default function DashboardResultsPage() {
                             'md:min-w-[600px] p-6 sm:p-10 [&>button]:hidden outline-none'
                           }
                         >
-                          <h4 className='text-lg md:text-xl font-semibold text-center'>
-                            Details
-                          </h4>
+                          {!isSuccess && (
+                            <h4 className='text-lg md:text-xl font-semibold text-center'>
+                              Details
+                            </h4>
+                          )}
 
-                          <img
-                            src={`${
-                              import.meta.env.VITE_BASE_URL
-                            }/images/eye-scans/${
-                              resultData[seletedResultIndex]?.eye_pic
-                            }`}
-                            alt='result'
-                            className='w-full mt-4 mx-auto rounded-lg'
-                          />
+                          {!isSuccess && (
+                            <img
+                              src={`${
+                                import.meta.env.VITE_BASE_URL
+                              }/images/eye-scans/${
+                                resultData[seletedResultIndex]?.eye_pic
+                              }`}
+                              alt='result'
+                              className='w-full mt-4 mx-auto rounded-lg'
+                            />
+                          )}
 
                           {!isDiagnosing && (
                             <div className=''>
@@ -395,7 +401,7 @@ export default function DashboardResultsPage() {
                             </div>
                           )}
 
-                          {isDiagnosing && (
+                          {isDiagnosing && !isSuccess && (
                             <form onSubmit={form.handleSubmit(handleSubmit)}>
                               <InputField
                                 label='Diagnosis'
@@ -422,46 +428,77 @@ export default function DashboardResultsPage() {
                             </form>
                           )}
 
-                          <div className='mt-6 flex justify-center gap-4'>
-                            <DialogClose
-                              asChild
-                              variant={
-                                userData?.data.role === 'dokter' && 'skeleton'
-                              }
-                              onClick={
-                                isDiagnosing
-                                  ? () => setIsDiagnosing(false)
-                                  : () => setIsDialogOpen(false)
-                              }
-                            >
-                              <Button
-                                className={`${
-                                  userData?.data.role === 'dokter'
-                                    ? 'w-1/2'
-                                    : 'bg-[#146EF5] text-white px-16 py-3'
-                                } rounded-md !text-xs lg:!text-sm`}
-                              >
-                                Back
-                              </Button>
-                            </DialogClose>
+                          {isSuccess && (
+                            <>
+                              <Lottie
+                                animationData={SuccessImage}
+                                loop
+                                className='w-1/2 mx-auto'
+                              />
 
-                            {userData?.data.role === 'dokter' && (
-                              <Button
+                              <h4 className='text-base sm:text-lg md:text-xl font-semibold text-center'>
+                                Patient Successfully Diagnose
+                              </h4>
+
+                              <div className='mt-6 mx-auto'>
+                                <DialogClose
+                                  asChild
+                                  onClick={() => {
+                                    setIsDialogOpen(false);
+                                    setIsDiagnosing(false);
+                                    setIsSuccess(false);
+                                  }}
+                                >
+                                  <Button className='rounded-md bg-[#146EF5] text-white px-18 py-3 !text-xs lg:!text-sm'>
+                                    Back
+                                  </Button>
+                                </DialogClose>
+                              </div>
+                            </>
+                          )}
+
+                          {!isSuccess && (
+                            <div className='mt-6 flex justify-center gap-4'>
+                              <DialogClose
+                                asChild
+                                variant={
+                                  userData?.data.role === 'dokter' && 'skeleton'
+                                }
                                 onClick={
                                   isDiagnosing
-                                    ? form.handleSubmit(handleSubmit)
-                                    : () => setIsDiagnosing(true)
+                                    ? () => setIsDiagnosing(false)
+                                    : () => setIsDialogOpen(false)
                                 }
-                                className='w-1/2 bg-[#146EF5] py-3 rounded-md !text-xs lg:!text-sm text-white'
                               >
-                                {isLoading ? (
-                                  <FaSpinner className='animate-spin mx-auto' />
-                                ) : (
-                                  'Diagnose'
-                                )}
-                              </Button>
-                            )}
-                          </div>
+                                <Button
+                                  className={`${
+                                    userData?.data.role === 'dokter'
+                                      ? 'w-1/2'
+                                      : 'bg-[#146EF5] text-white px-16 py-3'
+                                  } rounded-md !text-xs lg:!text-sm`}
+                                >
+                                  Back
+                                </Button>
+                              </DialogClose>
+
+                              {userData?.data.role === 'dokter' && (
+                                <Button
+                                  onClick={
+                                    isDiagnosing
+                                      ? form.handleSubmit(handleSubmit)
+                                      : () => setIsDiagnosing(true)
+                                  }
+                                  className='w-1/2 bg-[#146EF5] py-3 rounded-md !text-xs lg:!text-sm text-white'
+                                >
+                                  {isLoading ? (
+                                    <FaSpinner className='animate-spin mx-auto' />
+                                  ) : (
+                                    'Diagnose'
+                                  )}
+                                </Button>
+                              )}
+                            </div>
+                          )}
                         </DialogContent>
                       </Dialog>
                     </td>

@@ -166,7 +166,17 @@ export default function DashboardScanEyePage() {
         });
       }
     } catch (error) {
-      console.error('Error changing user profile:', error);
+      console.error('Error submitting eye examination:', error);
+      setIsDialogOpen(false);
+
+      toast('Oops! Something Went Wrong', {
+        description:
+          'An error occurred while submitting your eye examination. Please try again later.',
+        icon: <RiErrorWarningFill className='size-5 text-red-500' />,
+        classNames: {
+          title: '!text-red-500',
+        },
+      });
     } finally {
       setIsLoading(false);
       setController(null);
@@ -335,6 +345,7 @@ export default function DashboardScanEyePage() {
                     controller.abort();
                   }
                   setIsDialogOpen(false);
+                  setIsUploadSuccess(false);
                 }}
               >
                 <Button
