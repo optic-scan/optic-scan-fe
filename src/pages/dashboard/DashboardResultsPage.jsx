@@ -51,6 +51,25 @@ export default function DashboardResultsPage() {
     setCurrentPage(1);
   };
 
+  const fetchResultsData = async () => {
+    try {
+      const res = await fetchWithRefresh(
+        `${import.meta.env.VITE_BASE_URL}/exam/my-result`,
+        {
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+          },
+        }
+      );
+      const data = await res.json();
+      setResultData(data?.data || []);
+    } catch (error) {
+      console.error('Error fetching results data:', error);
+    }
+  };
+
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -70,25 +89,6 @@ export default function DashboardResultsPage() {
         setUserData(data);
       } catch (error) {
         console.error('Error fetching user data:', error);
-      }
-    };
-
-    const fetchResultsData = async () => {
-      try {
-        const res = await fetchWithRefresh(
-          `${import.meta.env.VITE_BASE_URL}/exam/my-result`,
-          {
-            credentials: 'include',
-            headers: {
-              'Content-Type': 'application/json',
-              Accept: 'application/json',
-            },
-          }
-        );
-        const data = await res.json();
-        setResultData(data?.data || []);
-      } catch (error) {
-        console.error('Error fetching results data:', error);
       }
     };
 
@@ -136,6 +136,7 @@ export default function DashboardResultsPage() {
 
       if (req.status === 200) {
         setIsSuccess(true);
+        fetchResultsData();
 
         form.reset();
       } else {
@@ -326,8 +327,8 @@ export default function DashboardResultsPage() {
                                           ?.examination_date
                                       )
                                     : formatDateToYearsMonths(
-                                        resultData[seletedResultIndex]
-                                          ?.examination_date
+                                        resultData[seletedResultIndex]?.patient
+                                          .birthdate
                                       )}
                                 </p>
                               </div>
