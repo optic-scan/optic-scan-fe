@@ -23,13 +23,15 @@ const ProtectedRoute = ({ children }) => {
         }
       } catch (error) {
         console.error('Authentication check failed:', error);
+
+        return authenticated ? children : <Navigate to='/login' replace />;
       } finally {
         setIsLoading(false);
       }
     }
 
     authenticateMe();
-  }, []);
+  }, [authenticated, children]);
 
   if (isLoading) {
     return null;

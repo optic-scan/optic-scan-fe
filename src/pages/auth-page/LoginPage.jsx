@@ -40,7 +40,7 @@ export default function LoginPage() {
   const handleSubmit = async values => {
     setIsLoading(true);
     try {
-      const req = await fetch(`${import.meta.env.VITE_BASE_URL}/login`, {
+      const req = await fetch(`${import.meta.env.VITE_BASE_URL}/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -83,7 +83,7 @@ export default function LoginPage() {
 
       toast('Oops! Something Went Wrong', {
         description:
-          'An error occurred while logging into your account. Please try again.',
+          'An error occurred while logging into your account. Please try again later.',
         icon: <RiErrorWarningFill className='size-5 text-red-500' />,
         classNames: {
           title: '!text-red-500',

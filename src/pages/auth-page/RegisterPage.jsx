@@ -63,7 +63,7 @@ export default function RegisterPage() {
     resolver: zodResolver(registerFormSchema),
   });
 
-  const [currentRole, setCurrentRole] = useState('patient');
+  const [currentRole, setCurrentRole] = useState('pasien');
   const [isLoading, setIsLoading] = useState(false);
 
   const handleChangeRole = value => {
@@ -73,22 +73,23 @@ export default function RegisterPage() {
   const handleSubmit = async values => {
     setIsLoading(true);
     try {
-      const req = await fetch(`${import.meta.env.VITE_BASE_URL}/register`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify({
-          name: values.name,
-          email: values.email.toLowerCase(),
-          birthdate: values.birthDate,
-          role: currentRole,
-          password: values.password,
-        }),
-      });
-
-      /* const res = await req.json(); */
+      const req = await fetch(
+        `${import.meta.env.VITE_BASE_URL}/auth/register`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include',
+          body: JSON.stringify({
+            name: values.name,
+            email: values.email.toLowerCase(),
+            birthdate: values.birthDate,
+            role: currentRole,
+            password: values.password,
+          }),
+        }
+      );
 
       if (req.status === 201) {
         toast('Account created successfully', {
@@ -228,12 +229,12 @@ export default function RegisterPage() {
   const tabItems = [
     {
       label: 'Register as Patient',
-      value: 'patient',
+      value: 'pasien',
       content: registerForm(),
     },
     {
       label: 'Register as Doctor',
-      value: 'doctor',
+      value: 'dokter',
       content: registerForm(),
     },
   ];

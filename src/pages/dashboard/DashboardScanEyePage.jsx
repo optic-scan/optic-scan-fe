@@ -1,25 +1,102 @@
-import { useState } from 'react';
+import { useForm, Controller } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
+
 import SideBar from '../../components/dashboard-components/Sidebar';
 import { useDropzone } from 'react-dropzone';
 import Button from '../../components/Button';
 import { useNavigate } from 'react-router';
+import { useState } from 'react';
+import { fetchWithRefresh } from '../../../lib/utils';
+import { toast } from 'sonner';
+import { RiErrorWarningFill } from 'react-icons/ri';
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogTrigger,
+} from '../../../components/ui/dialog';
+import Lottie from 'lottie-react';
+import LoadingImage from '../../assets/dashboard/ai-processing.json';
+import SuccessImage from '../../assets/dashboard/ai-success.json';
+import { FaSpinner } from 'react-icons/fa';
+
+const formSchema = z.object({
+  file: z
+    .custom(file => file instanceof File && file.size > 0, {
+      message: 'A photo is required',
+    })
+    .refine(
+      file =>
+        file && ['image/jpeg', 'image/png', 'image/jpg'].includes(file.type),
+      {
+        message: 'Unsupported file format',
+      }
+    )
+    .refine(file => file && file.size <= 5 * 1024 * 1024, {
+      message: 'File size must be less than or equal to 5MB',
+    }),
+  complaints: z.string(),
+});
 
 export default function DashboardScanEyePage() {
+  const [isLoading, setIsLoading] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isUploadSuccess, setIsUploadSuccess] = useState(false);
+  const [controller, setController] = useState(null);
+
   const navigate = useNavigate();
 
-  const [file, setFile] = useState(null);
+  const {
+    control,
+    handleSubmit,
+    setValue,
+    watch,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      file: undefined,
+      complaints: '',
+    },
+  });
 
-  const handleFileUpload = acceptedFiles => {
+  const file = watch('file');
+
+  const onDrop = acceptedFiles => {
     const uploadedFile = acceptedFiles[0];
-
     if (uploadedFile) {
-      setFile(uploadedFile);
+      setValue('file', uploadedFile, { shouldValidate: true });
+    }
+  };
 
-      const formData = new FormData();
-      formData.append('file', uploadedFile);
-
-      /* TODO: Upload file */
-      console.log('Uploaded file:', uploadedFile);
+  const onDropRejected = fileRejections => {
+    const error = fileRejections[0]?.errors[0];
+    if (error?.code === 'file-too-large') {
+      toast('Oops! Something Went Wrong', {
+        description: 'File size must be less than or equal to 5MB.',
+        icon: <RiErrorWarningFill className='size-5 text-red-500' />,
+        classNames: {
+          title: '!text-red-500',
+        },
+      });
+    } else if (error?.code === 'file-invalid-type') {
+      toast('Oops! Something Went Wrong', {
+        description: 'File must be in JPEG, PNG, or JPG format.',
+        icon: <RiErrorWarningFill className='size-5 text-red-500' />,
+        classNames: {
+          title: '!text-red-500',
+        },
+      });
+    } else {
+      toast('Oops! Something Went Wrong', {
+        description:
+          'An error occurred while uploading the file. Please try again later.',
+        icon: <RiErrorWarningFill className='size-5 text-red-500' />,
+        classNames: {
+          title: '!text-red-500',
+        },
+      });
     }
   };
 
@@ -29,7 +106,6 @@ export default function DashboardScanEyePage() {
     isDragActive,
     isDragReject,
     isDragAccept,
-    fileRejections,
   } = useDropzone({
     accept: {
       'image/jpeg': [],
@@ -37,8 +113,75 @@ export default function DashboardScanEyePage() {
       'image/jpg': [],
     },
     maxFiles: 1,
-    onDrop: handleFileUpload,
+    maxSize: 5 * 1024 * 1024, // 5MB
+    onDrop,
+    onDropRejected,
   });
+
+  const onSubmit = async data => {
+    const abortController = new AbortController();
+    setController(abortController);
+
+    const formData = new FormData();
+    formData.append('eye_pic', data.file);
+    formData.append('complaints', data.complaints);
+
+    try {
+      setIsLoading(true);
+      setIsDialogOpen(true);
+
+      const res = await fetchWithRefresh(
+        `${import.meta.env.VITE_BASE_URL}/exam/submit-exam`,
+        {
+          method: 'POST',
+          credentials: 'include',
+          headers: {
+            Accept: 'application/json',
+          },
+          body: formData,
+          signal: abortController.signal,
+        }
+      );
+
+      const data = await res.json();
+
+      if (
+        res.status === 201 &&
+        data.message === 'Pemeriksaan berhasil diajukan'
+      ) {
+        setIsUploadSuccess(true);
+
+        setValue('file', null);
+        setValue('complaints', '');
+      } else {
+        setIsDialogOpen(false);
+
+        toast('Oops! Something Went Wrong', {
+          description:
+            'An error occurred while submitting your eye examination. Please try again later.',
+          icon: <RiErrorWarningFill className='size-5 text-red-500' />,
+          classNames: {
+            title: '!text-red-500',
+          },
+        });
+      }
+    } catch (error) {
+      console.error('Error submitting eye examination:', error);
+      setIsDialogOpen(false);
+
+      toast('Oops! Something Went Wrong', {
+        description:
+          'An error occurred while submitting your eye examination. Please try again later.',
+        icon: <RiErrorWarningFill className='size-5 text-red-500' />,
+        classNames: {
+          title: '!text-red-500',
+        },
+      });
+    } finally {
+      setIsLoading(false);
+      setController(null);
+    }
+  };
 
   return (
     <div className='flex h-screen overflow-y-hidden'>
@@ -49,7 +192,10 @@ export default function DashboardScanEyePage() {
           Scan Eye
         </h1>
 
-        <div className='mt-6 md:mt-10 p-6 md:p-10 h-full bg-white rounded-2xl flex flex-col overflow-hidden'>
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className='mt-6 md:mt-10 p-6 md:p-10 h-full bg-white rounded-2xl flex flex-col overflow-hidden'
+        >
           {/* Upload Photo */}
           <div>
             <h2 className='text-lg md:text-xl lg:text-2xl font-semibold'>
@@ -59,19 +205,18 @@ export default function DashboardScanEyePage() {
             <div
               {...getRootProps()}
               className={`mt-4 p-6 border-2 rounded-lg text-center cursor-pointer transition-all duration-300 ease-out
-              ${
-                isDragActive
-                  ? 'border-blue-500 bg-blue-100'
-                  : isDragAccept
-                  ? 'border-green-500 bg-green-100'
-                  : isDragReject
-                  ? 'border-red-500 bg-red-100'
-                  : 'border-dashed border-[#EAEAEA] bg-gray-50 hover:border-gray-400'
-              }
-            `}
+                ${
+                  isDragActive
+                    ? 'border-blue-500 bg-blue-100'
+                    : isDragAccept
+                    ? 'border-green-500 bg-green-100'
+                    : isDragReject
+                    ? 'border-red-500 bg-red-100'
+                    : 'border-dashed border-[#EAEAEA] bg-gray-50 hover:border-gray-400'
+                }
+              `}
             >
               <input {...getInputProps()} />
-
               <div className='flex flex-col justify-center items-center h-[175px] md:h-[200px]'>
                 <svg
                   xmlns='http://www.w3.org/2000/svg'
@@ -89,7 +234,6 @@ export default function DashboardScanEyePage() {
                     strokeLinejoin='round'
                   />
                 </svg>
-
                 {isDragActive ? (
                   <p className='text-sm md:text-base'>Drop the file here...</p>
                 ) : (
@@ -100,10 +244,9 @@ export default function DashboardScanEyePage() {
               </div>
             </div>
 
-            {fileRejections.length > 0 && (
+            {errors.file && (
               <p className='mt-2 text-red-500 text-xs md:text-sm'>
-                File type not supported. Only .jpg, .jpeg, and .png files are
-                allowed.
+                {errors.file.message}
               </p>
             )}
 
@@ -115,38 +258,121 @@ export default function DashboardScanEyePage() {
             )}
           </div>
 
-          {/* Add Complaints */}
+          {/* Complaints */}
           <div className='mt-6 md:mt-10 flex flex-col flex-1'>
             <h2 className='text-lg md:text-xl lg:text-2xl font-semibold'>
               Add Complaints
             </h2>
 
             <div className='mt-4 flex-1'>
-              <textarea
-                className='w-full h-full px-4 py-3 rounded-lg border-2 border-[#EAEAEA] focus:outline-none resize-none text-sm md:text-base'
-                placeholder='Enter your complaints here...'
+              <Controller
+                name='complaints'
+                control={control}
+                render={({ field }) => (
+                  <textarea
+                    {...field}
+                    className='w-full h-full px-4 py-3 rounded-lg border-2 border-[#EAEAEA] focus:outline-none resize-none text-sm md:text-base'
+                    placeholder='Enter your complaints here...'
+                  />
+                )}
               />
+              {errors.complaints && (
+                <p className='mt-1 text-red-500 text-xs md:text-sm'>
+                  {errors.complaints.message}
+                </p>
+              )}
             </div>
           </div>
 
           <div className='mt-6 md:mt-10 flex justify-end gap-2'>
             <Button
-              type={'button'}
-              variant={'skeleton'}
+              type='button'
+              variant='skeleton'
               onClick={() => navigate(-1)}
-              className={'w-1/2 md:w-max md:px-20'}
+              className='w-1/2 md:w-max md:px-20'
             >
               Back
             </Button>
-
             <Button
-              type={'submit'}
-              className={'bg-[#146EF5] text-white w-1/2 md:w-max md:px-20'}
+              type='submit'
+              disabled={isLoading}
+              className='bg-[#146EF5] text-white w-1/2 md:w-max md:px-20'
             >
-              Next
+              {isLoading ? (
+                <FaSpinner className='animate-spin mx-auto' />
+              ) : (
+                'Next'
+              )}
             </Button>
           </div>
-        </div>
+        </form>
+
+        <Dialog open={isDialogOpen}>
+          <DialogTrigger
+            asChild
+            onClick={() => setIsDialogOpen(true)}
+          ></DialogTrigger>
+          <DialogContent
+            className={
+              'md:min-w-[600px] p-6 sm:p-10 [&>button]:hidden outline-none'
+            }
+          >
+            {isUploadSuccess ? (
+              <Lottie
+                animationData={SuccessImage}
+                loop
+                className='w-1/2 mx-auto'
+              />
+            ) : (
+              <Lottie
+                animationData={LoadingImage}
+                loop
+                className='w-1/2 mx-auto'
+              />
+            )}
+
+            <h4 className='text-base sm:text-lg md:text-xl font-semibold text-center'>
+              {isUploadSuccess
+                ? 'Your complaint have been submited and being analized by our doctors..'
+                : 'Our AI is Processing Your Complaint...'}
+            </h4>
+
+            <div className='flex gap-4 mt-6'>
+              <DialogClose
+                asChild
+                onClick={() => {
+                  if (controller) {
+                    controller.abort();
+                  }
+                  setIsDialogOpen(false);
+                  setIsUploadSuccess(false);
+                }}
+              >
+                <Button
+                  type={'button'}
+                  variant={isUploadSuccess && 'skeleton'}
+                  className={`${
+                    isUploadSuccess
+                      ? 'w-1/2'
+                      : 'mx-auto w-max px-12 bg-red-500 text-white'
+                  }`}
+                >
+                  Cancel
+                </Button>
+              </DialogClose>
+
+              {isUploadSuccess && (
+                <Button
+                  type={'button'}
+                  href={'/dashboard/results'}
+                  className={'w-1/2 bg-[#146EF5] text-white'}
+                >
+                  Results List
+                </Button>
+              )}
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );

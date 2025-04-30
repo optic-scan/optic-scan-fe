@@ -18,10 +18,29 @@ export function CardHeader({ children, className }) {
   );
 }
 
-export function CardContent({ children, className }) {
+export function CardContentContainer({ children, className }) {
+  return <div className={`${className} flex gap-4 items-end`}>{children}</div>;
+}
+
+export function CardContent({ children, className, status, online }) {
+  return (
+    <div className={`${className} mt-4 md:mt-6 flex items-center gap-4`}>
+      {status && (
+        <div
+          className={`min-h-3 max-h-3 min-w-3 max-w-3  ${
+            online ? 'bg-green-500' : 'bg-red-500'
+          } rounded-full`}
+        ></div>
+      )}
+      <p className=''>{children}</p>
+    </div>
+  );
+}
+
+export function CardContentSmall({ children, className }) {
   return (
     <p
-      className={`${className} mt-4 md:mt-6 text-sm md:text-base text-[#303030]`}
+      className={`${className} mt-4 md:mt-6 text-xs md:text-sm text-[#303030]`}
     >
       {children}
     </p>
