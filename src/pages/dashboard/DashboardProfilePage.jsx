@@ -103,6 +103,27 @@ export default function DashboardProfilePage() {
     }
   };
 
+  const fetchUserData = async () => {
+    try {
+      const res = await fetchWithRefresh(
+        `${import.meta.env.VITE_BASE_URL}/user/profile`,
+        {
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+          },
+        }
+      );
+
+      const data = await res.json();
+
+      setUserData(data);
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+    }
+  };
+
   const handleChangeProfilePicture = async () => {
     if (!file) return;
 
@@ -138,6 +159,8 @@ export default function DashboardProfilePage() {
             title: '!text-green-500',
           },
         });
+
+        fetchUserData();
 
         setIsDialogOpen(false);
       } else {
@@ -175,27 +198,6 @@ export default function DashboardProfilePage() {
   });
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const res = await fetchWithRefresh(
-          `${import.meta.env.VITE_BASE_URL}/user/profile`,
-          {
-            credentials: 'include',
-            headers: {
-              'Content-Type': 'application/json',
-              Accept: 'application/json',
-            },
-          }
-        );
-
-        const data = await res.json();
-
-        setUserData(data);
-      } catch (error) {
-        console.error('Error fetching user data:', error);
-      }
-    };
-
     fetchUserData();
   }, []);
 
@@ -248,6 +250,8 @@ export default function DashboardProfilePage() {
           title: '!text-green-500',
         },
       });
+
+      fetchUserData();
     } else {
       toast('Error updating account', {
         description:
