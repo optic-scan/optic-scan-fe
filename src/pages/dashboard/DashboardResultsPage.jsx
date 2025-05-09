@@ -282,7 +282,7 @@ export default function DashboardResultsPage() {
                                 resultData[seletedResultIndex]?.eye_pic
                               }`}
                               alt='result'
-                              className='w-full mt-4 mx-auto rounded-lg'
+                              className='w-2/3 h-full object-cover mt-4 mx-auto rounded-lg'
                             />
                           )}
 

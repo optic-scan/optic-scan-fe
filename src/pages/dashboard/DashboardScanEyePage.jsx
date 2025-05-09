@@ -33,8 +33,8 @@ const formSchema = z.object({
         message: 'Unsupported file format',
       }
     )
-    .refine(file => file && file.size <= 5 * 1024 * 1024, {
-      message: 'File size must be less than or equal to 5MB',
+    .refine(file => file && file.size <= 1 * 1024 * 1024, {
+      message: 'File size must be less than or equal to 1MB',
     }),
   complaints: z.string(),
 });
@@ -74,7 +74,7 @@ export default function DashboardScanEyePage() {
     const error = fileRejections[0]?.errors[0];
     if (error?.code === 'file-too-large') {
       toast('Oops! Something Went Wrong', {
-        description: 'File size must be less than or equal to 5MB.',
+        description: 'File size must be less than or equal to 1MB.',
         icon: <RiErrorWarningFill className='size-5 text-red-500' />,
         classNames: {
           title: '!text-red-500',
@@ -113,7 +113,7 @@ export default function DashboardScanEyePage() {
       'image/jpg': [],
     },
     maxFiles: 1,
-    maxSize: 5 * 1024 * 1024, // 5MB
+    maxSize: 1 * 1024 * 1024, // 1MB
     onDrop,
     onDropRejected,
   });
