@@ -9,15 +9,15 @@ export default function Footer() {
             <div className='flex items-center gap-2'>
               <img src={Logo} alt='logo' className='w-6 sm:w-7 lg:w-8' />
               <h1 className='text-xl sm:text-2xl lg:text-3xl font-semibold'>
-                OpticScan
+                IntelliSight
               </h1>
             </div>
 
             <p className='mt-6 md:mt-8 text-xs sm:text-sm lg:text-base'>
-              With a clear vision of improving global health, OpticScan empowers
-              both patients and healthcare providers with the tools to manage
-              eye health proactively, ensuring better outcomes and enhancing the
-              overall quality of care.
+              With a clear vision of improving global health, IntelliSight
+              empowers both patients and healthcare providers with the tools to
+              manage eye health proactively, ensuring better outcomes and
+              enhancing the overall quality of care.
             </p>
 
             <a
@@ -45,7 +45,7 @@ export default function Footer() {
       </div>
 
       <p className='hidden lg:block text-center py-10'>
-        © 2025 OpticScan. HUMIC Enginnering All rights reserved
+        © 2025 IntelliSight. HUMIC Enginnering All rights reserved
       </p>
     </div>
   );

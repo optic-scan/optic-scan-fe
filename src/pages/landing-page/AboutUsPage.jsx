@@ -19,11 +19,11 @@ export default function AboutUsPage() {
           }
         >
           <CardHeader className='capitalize !text-base sm:!text-lg md:!text-xl lg:!text-2xl'>
-            OpticScan is an innovative solution that uses IoT and AI technology
-            Build by the HUMIC Engineering Team for early detection of eye
-            diseases. With a vision to create a healthier world, OpticScan
-            provides affordable and accessible solutions for the community and
-            healthcare facilities.
+            IntelliSight is an innovative solution that uses IoT and AI
+            technology Build by the HUMIC Engineering Team for early detection
+            of eye diseases. With a vision to create a healthier world,
+            IntelliSight provides affordable and accessible solutions for the
+            community and healthcare facilities.
           </CardHeader>
         </CardContainer>
 

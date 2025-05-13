@@ -14,10 +14,10 @@ export default function AboutUsSection() {
             Early Detection for Eye Disease
           </h4>
           <p className='text-sm lg:text-base mt-6 text-[#606060]'>
-            By combining AI and IoT, OpticScan offer innovative solutions for
+            By combining AI and IoT, IntelliSight offer innovative solutions for
             early detection and diagnosis of eye diseases, making eye care more
             accessible, accurate, and efficient. With a clear vision of
-            improving global health, OpticScan empowers both patients and
+            improving global health, IntelliSight empowers both patients and
             healthcare providers with the tools to manage eye health
             proactively, ensuring better outcomes and enhancing the overall
             quality of care.

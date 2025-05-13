@@ -97,7 +97,7 @@ export default function SideBar() {
               </svg>
 
               <h1 className='text-xl font-semibold text-white hidden xl:block z-10'>
-                OpticScan
+                IntelliSight
               </h1>
 
               <div className='w-[120%] h-20 absolute bg-radial from-[#146EF5]/0 xl:from-[#146EF5]/15 from-0% to-transparent to-80% z-0 -left-3'></div>

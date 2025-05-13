@@ -12,8 +12,8 @@ export default function LandingHomePageHeroSection() {
         </h1>
 
         <p className='mt-4 sm:mt-5 md:mt-7 text-sm sm:text-base md:text-lg lg:text-xl text-[#DADADA]'>
-          OpticScan: Artificial Intelligence (AI) Based Eye Disease Diagnostic
-          System
+          IntelliSight: Artificial Intelligence (AI) Based Eye Disease
+          Diagnostic System
         </p>
 
         <Button className='mt-8 sm:mt-10 bg-white text-black px-6 rounded-xl'>
