@@ -45,7 +45,7 @@ export default function Navbar() {
       <div className='hidden lg:flex justify-between items-center p-6 fixed inset-x-0 container mx-auto z-50'>
         <div className='flex justify-center items-center gap-3 relative'>
           <img src={Logo} alt='logo' className='w-8 z-10' />
-          <h1 className='text-2xl font-semibold z-10'>OpticScan</h1>
+          <h1 className='text-2xl font-semibold z-10'>IntelliSight</h1>
 
           <div className='w-[150%] h-24 absolute bg-radial from-[#146EF5]/15 from-0% to-transparent to-80% z-0'></div>
         </div>
@@ -154,7 +154,7 @@ export default function Navbar() {
 
         <div className='flex justify-center items-center gap-3 relative'>
           <img src={Logo} alt='logo' className='w-8 z-10' />
-          <h1 className='text-2xl font-semibold z-10'>OpticScan</h1>
+          <h1 className='text-2xl font-semibold z-10'>IntelliSight</h1>
 
           <div className='w-[150%] h-24 absolute bg-radial from-[#146EF5]/15 from-0% to-transparent to-80% z-0'></div>
         </div>
