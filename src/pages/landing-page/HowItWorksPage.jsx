@@ -15,10 +15,10 @@ export default function HowItWorksPage() {
           HOW IT WORKS.
         </h2>
 
-        <div className='flex items-center gap-10 mt-8 sm:mt-10 md:mt-14 xl:mt-16'>
+        <div className='flex items-center flex-col lg:flex-row gap-10 mt-8 sm:mt-10 md:mt-14 xl:mt-16'>
           <CardContainer
             className={
-              'w-1/2 bg-[#474747]/60 text-white border border-[#474747]/10 px-8 sm:px-10 lg:px-16 py-8 sm:py-12 lg:py-16 xl:py-20 h-max'
+              'lg:w-1/2 bg-[#474747]/60 text-white border border-[#474747]/10 px-8 sm:px-10 lg:px-16 py-8 sm:py-12 lg:py-16 xl:py-20 h-max'
             }
           >
             <CardHeader className='capitalize !text-base sm:!text-lg md:!text-xl lg:!text-2xl'>
@@ -36,14 +36,14 @@ export default function HowItWorksPage() {
           <img
             src={HowItWorks1}
             alt='how-it-works-1'
-            className='w-1/3 mx-auto'
+            className='w-2/3 lg:w-1/3 mx-auto'
           />
         </div>
 
-        <div className='flex flex-row-reverse items-center gap-10 mt-10 sm:mt-20 md:mt-24 xl:mt-26'>
+        <div className='flex flex-col lg:flex-row-reverse items-center gap-10 mt-10 sm:mt-20 md:mt-24 xl:mt-26'>
           <CardContainer
             className={
-              'w-1/2 bg-[#474747]/60 text-white border border-[#474747]/10 px-8 sm:px-10 lg:px-16 py-8 sm:py-12 lg:py-16 xl:py-20 h-max'
+              'lg:w-1/2 bg-[#474747]/60 text-white border border-[#474747]/10 px-8 sm:px-10 lg:px-16 py-8 sm:py-12 lg:py-16 xl:py-20 h-max'
             }
           >
             <CardHeader className='capitalize !text-base sm:!text-lg md:!text-xl lg:!text-2xl'>
@@ -61,14 +61,14 @@ export default function HowItWorksPage() {
           <img
             src={HowItWorks2}
             alt='how-it-works-2'
-            className='w-1/3 mx-auto'
+            className='w-2/3 lg:w-1/3 mx-auto'
           />
         </div>
 
-        <div className='flex items-center gap-10 mt-8 sm:mt-10 md:mt-14 xl:mt-16'>
+        <div className='flex items-center flex-col lg:flex-row gap-10 mt-8 sm:mt-10 md:mt-14 xl:mt-16'>
           <CardContainer
             className={
-              'w-1/2 bg-[#474747]/60 text-white border border-[#474747]/10 px-8 sm:px-10 lg:px-16 py-8 sm:py-12 lg:py-16 xl:py-20 h-max'
+              'lg:w-1/2 bg-[#474747]/60 text-white border border-[#474747]/10 px-8 sm:px-10 lg:px-16 py-8 sm:py-12 lg:py-16 xl:py-20 h-max'
             }
           >
             <CardHeader className='capitalize !text-base sm:!text-lg md:!text-xl lg:!text-2xl'>
@@ -86,7 +86,7 @@ export default function HowItWorksPage() {
           <img
             src={HowItWorks3}
             alt='how-it-works-3'
-            className='w-1/3 mx-auto'
+            className='w-2/3 lg:w-1/3 mx-auto'
           />
         </div>
 
