@@ -34,11 +34,11 @@ export default function Footer() {
             </h4>
 
             <div className='mt-4 md:mt-6 text-xs lg:text-sm flex lg:flex-col gap-4'>
-              <a href='#what-we-offer'>What We Offer</a>
+              <a href='/#what-we-offer'>What We Offer</a>
 
-              <a href='#about-us'>About Us</a>
+              <a href='/about-us'>About Us</a>
 
-              <a href='#how-it-works'>How It Works</a>
+              <a href='/how-it-works'>How It Works</a>
             </div>
           </div>
         </div>
