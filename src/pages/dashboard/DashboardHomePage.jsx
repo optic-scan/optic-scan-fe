@@ -293,7 +293,7 @@ export default function HomePasien() {
                           </p>
                         </div>
                         <p className='font-semibold text-xs md:text-sm'>
-                          {dayjs(result.examination_date).fromNow()}
+                          {dayjs(result.created_at).fromNow()}
                         </p>
                       </div>
                       {index !== 3 && (

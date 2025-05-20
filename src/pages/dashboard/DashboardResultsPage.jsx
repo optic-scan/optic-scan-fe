@@ -282,12 +282,12 @@ export default function DashboardResultsPage() {
                                 resultData[seletedResultIndex]?.eye_pic
                               }`}
                               alt='result'
-                              className='w-2/3 h-full object-cover mt-4 mx-auto rounded-lg'
+                              className='w-2/3 h-full aspect-video object-cover mt-4 mx-auto rounded-lg'
                             />
                           )}
 
                           {!isDiagnosing && (
-                            <div className=''>
+                            <div className='text-sm sm:text-base'>
                               <div className='mt-6 flex justify-between'>
                                 <p className='font-semibold'>
                                   {resultData[seletedResultIndex]?.status ===

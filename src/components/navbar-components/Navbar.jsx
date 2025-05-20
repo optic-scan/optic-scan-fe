@@ -204,9 +204,29 @@ export default function Navbar() {
                 location.pathname === '/how-it-works'
                   ? 'text-black'
                   : 'text-[#484848]'
-              } block w-full text-center py-6`}
+              } block w-full text-center py-6 border-b-2 border-[#D9D9D9]/20`}
             >
               How It Works
+            </a>
+
+            <a
+              href='/register'
+              className={`${
+                location.pathname === '/register'
+                  ? 'text-black'
+                  : 'text-[#484848]'
+              } block w-full text-center py-6 border-b-2 border-[#D9D9D9]/20`}
+            >
+              Register
+            </a>
+
+            <a
+              href='/login'
+              className={`${
+                location.pathname === '/login' ? 'text-black' : 'text-[#484848]'
+              } block w-full text-center py-6`}
+            >
+              Login
             </a>
           </div>
         </div>
