@@ -16,8 +16,11 @@ export default function LandingHomePageHeroSection() {
           Diagnostic System
         </p>
 
-        <Button className='mt-8 sm:mt-10 bg-white text-black px-6 rounded-xl'>
-          Get Started
+        <Button
+          className='mt-8 sm:mt-10 bg-white text-black px-6 rounded-xl'
+          asChild
+        >
+          <a href='/dashboard/home'>Get Started</a>
         </Button>
       </div>
 
