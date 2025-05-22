@@ -106,7 +106,7 @@ export default function DashboardProfilePage() {
   const fetchUserData = async () => {
     try {
       const res = await fetchWithRefresh(
-        `${import.meta.env.VITE_BASE_URL}/user/profile`,
+        `${import.meta.env.VITE_API_URL}/user/profile`,
         {
           credentials: 'include',
           headers: {
@@ -134,7 +134,7 @@ export default function DashboardProfilePage() {
       setIsChangeProfileLoading(true);
 
       const res = await fetchWithRefresh(
-        `${import.meta.env.VITE_BASE_URL}/user/change-profile-pic`,
+        `${import.meta.env.VITE_API_URL}/user/change-profile-pic`,
         {
           method: 'PATCH',
           credentials: 'include',
@@ -226,7 +226,7 @@ export default function DashboardProfilePage() {
 
   const handleProfileSubmit = async payload => {
     const res = await fetchWithRefresh(
-      `${import.meta.env.VITE_BASE_URL}/user/profile`,
+      `${import.meta.env.VITE_API_URL}/user/profile`,
       {
         method: 'PATCH',
         credentials: 'include',
@@ -266,7 +266,7 @@ export default function DashboardProfilePage() {
 
   const handlePasswordSubmit = async payload => {
     const res = await fetchWithRefresh(
-      `${import.meta.env.VITE_BASE_URL}/user/change-password`,
+      `${import.meta.env.VITE_API_URL}/user/change-password`,
       {
         method: 'PATCH',
         credentials: 'include',
@@ -340,7 +340,7 @@ export default function DashboardProfilePage() {
                   <div className='relative -translate-y-1/4 cursor-pointer'>
                     <img
                       src={`${
-                        import.meta.env.VITE_BASE_URL
+                        import.meta.env.VITE_API_URL
                       }/images/profile-pics/${userData?.data.profile_pic}`}
                       alt='profile'
                       className='size-24 sm:size-32 md:size-36 rounded-full border-4 border-white object-center object-cover'

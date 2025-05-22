@@ -8,7 +8,7 @@ export default function RedirectIfAuthenticated({ children }) {
   useEffect(() => {
     async function checkAuthStatus() {
       try {
-        const req = await fetch(`${import.meta.env.VITE_BASE_URL}/auth/me`, {
+        const req = await fetch(`${import.meta.env.VITE_API_URL}/auth/me`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',

@@ -54,7 +54,7 @@ export default function DashboardResultsPage() {
   const fetchResultsData = async () => {
     try {
       const res = await fetchWithRefresh(
-        `${import.meta.env.VITE_BASE_URL}/exam/my-result`,
+        `${import.meta.env.VITE_API_URL}/exam/my-result`,
         {
           credentials: 'include',
           headers: {
@@ -74,7 +74,7 @@ export default function DashboardResultsPage() {
     const fetchUserData = async () => {
       try {
         const res = await fetchWithRefresh(
-          `${import.meta.env.VITE_BASE_URL}/user/profile`,
+          `${import.meta.env.VITE_API_URL}/user/profile`,
           {
             credentials: 'include',
             headers: {
@@ -118,7 +118,7 @@ export default function DashboardResultsPage() {
     setIsLoading(true);
     try {
       const req = await fetchWithRefresh(
-        `${import.meta.env.VITE_BASE_URL}/exam/diagnosis-dokter`,
+        `${import.meta.env.VITE_API_URL}/exam/diagnosis-dokter`,
         {
           method: 'POST',
           body: JSON.stringify({
@@ -277,7 +277,7 @@ export default function DashboardResultsPage() {
                           {!isSuccess && (
                             <img
                               src={`${
-                                import.meta.env.VITE_BASE_URL
+                                import.meta.env.VITE_API_URL
                               }/images/eye-scans/${
                                 resultData[seletedResultIndex]?.eye_pic
                               }`}

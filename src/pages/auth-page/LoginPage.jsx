@@ -40,7 +40,7 @@ export default function LoginPage() {
   const handleSubmit = async values => {
     setIsLoading(true);
     try {
-      const req = await fetch(`${import.meta.env.VITE_BASE_URL}/auth/login`, {
+      const req = await fetch(`${import.meta.env.VITE_API_URL}/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
