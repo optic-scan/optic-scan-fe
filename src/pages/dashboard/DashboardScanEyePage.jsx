@@ -131,7 +131,7 @@ export default function DashboardScanEyePage() {
       setIsDialogOpen(true);
 
       const res = await fetchWithRefresh(
-        `${import.meta.env.VITE_BASE_URL}/exam/submit-exam`,
+        `${import.meta.env.VITE_API_URL}/exam/submit-exam`,
         {
           method: 'POST',
           credentials: 'include',

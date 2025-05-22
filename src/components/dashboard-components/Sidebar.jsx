@@ -32,7 +32,7 @@ export default function SideBar() {
   const handleLogout = async () => {
     setIsLoading(true);
     try {
-      const req = await fetch(`${import.meta.env.VITE_BASE_URL}/auth/logout`, {
+      const req = await fetch(`${import.meta.env.VITE_API_URL}/auth/logout`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

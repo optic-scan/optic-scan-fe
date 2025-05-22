@@ -73,23 +73,20 @@ export default function RegisterPage() {
   const handleSubmit = async values => {
     setIsLoading(true);
     try {
-      const req = await fetch(
-        `${import.meta.env.VITE_BASE_URL}/auth/register`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          credentials: 'include',
-          body: JSON.stringify({
-            name: values.name,
-            email: values.email.toLowerCase(),
-            birthdate: values.birthDate,
-            role: currentRole,
-            password: values.password,
-          }),
-        }
-      );
+      const req = await fetch(`${import.meta.env.VITE_API_URL}/auth/register`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+          name: values.name,
+          email: values.email.toLowerCase(),
+          birthdate: values.birthDate,
+          role: currentRole,
+          password: values.password,
+        }),
+      });
 
       if (req.status === 201) {
         toast('Account created successfully', {

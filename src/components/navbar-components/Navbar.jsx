@@ -15,7 +15,7 @@ export default function Navbar() {
     const fetchUserData = async () => {
       try {
         const res = await fetchWithRefresh(
-          `${import.meta.env.VITE_BASE_URL}/user/profile`,
+          `${import.meta.env.VITE_API_URL}/user/profile`,
           {
             credentials: 'include',
             headers: {
@@ -113,7 +113,7 @@ export default function Navbar() {
 
             <a href='/dashboard/home'>
               <img
-                src={`${import.meta.env.VITE_BASE_URL}/images/profile-pics/${
+                src={`${import.meta.env.VITE_API_URL}/images/profile-pics/${
                   userData?.data.profile_pic
                 }`}
                 alt='profile'

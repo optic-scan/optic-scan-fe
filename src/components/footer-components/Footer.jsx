@@ -21,7 +21,7 @@ export default function Footer() {
             </p>
 
             <a
-              href=''
+              href='/about-us'
               className='block mt-4 md:mt-6 font-semibold text-xs sm:text-sm lg:text-base'
             >
               Learn more {'>>'}
@@ -42,6 +42,17 @@ export default function Footer() {
             </div>
           </div>
         </div>
+
+        <p className='mt-8 md:mt-10 text-center text-xs sm:text-sm lg:text-base'>
+          Get the mobile app{' '}
+          <a
+            href={`${import.meta.env.VITE_BASE_URL}/app-arm64-v8a-release.apk`}
+            className='font-medium text-[#0E57C6] underline underline-offset-4 cursor-pointer'
+          >
+            here
+          </a>
+          .
+        </p>
       </div>
 
       <p className='hidden lg:block text-center py-10'>

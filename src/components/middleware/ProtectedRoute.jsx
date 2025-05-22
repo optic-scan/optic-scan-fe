@@ -8,7 +8,7 @@ const ProtectedRoute = ({ children }) => {
   useEffect(() => {
     async function authenticateMe() {
       try {
-        const req = await fetch(`${import.meta.env.VITE_BASE_URL}/auth/me`, {
+        const req = await fetch(`${import.meta.env.VITE_API_URL}/auth/me`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',

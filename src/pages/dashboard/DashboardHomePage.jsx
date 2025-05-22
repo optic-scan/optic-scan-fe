@@ -22,7 +22,7 @@ export default function HomePasien() {
     const fetchUserData = async () => {
       try {
         const res = await fetchWithRefresh(
-          `${import.meta.env.VITE_BASE_URL}/user/profile`,
+          `${import.meta.env.VITE_API_URL}/user/profile`,
           {
             credentials: 'include',
             headers: {
@@ -43,7 +43,7 @@ export default function HomePasien() {
     const fetchResultsData = async () => {
       try {
         const res = await fetchWithRefresh(
-          `${import.meta.env.VITE_BASE_URL}/exam/my-result`,
+          `${import.meta.env.VITE_API_URL}/exam/my-result`,
           {
             credentials: 'include',
             headers: {
@@ -62,7 +62,7 @@ export default function HomePasien() {
     const fetchUserCount = async () => {
       try {
         const res = await fetchWithRefresh(
-          `${import.meta.env.VITE_BASE_URL}/user/users-count`,
+          `${import.meta.env.VITE_API_URL}/user/users-count`,
           {
             credentials: 'include',
             headers: {
